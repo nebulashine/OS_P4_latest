@@ -1,0 +1,71 @@
+README for recording tips when modifying code for project 2
+
+
+HUANG (Feb. 10th):
+	1. Code modification for argument passing is done in process.c only. No other source code is modified for this part.
+
+	2. Modified two functions in process.c for argument passing:
+		(1) tid_t process_execute (const char *file_name)
+		(2) static void start_process (void *file_name_)
+
+	3. Original code that was substituted has been commented out with the following tag:
+		/* Original Code
+		.....(original code here).................. */
+
+	4. My new code has been marked with the following tag:
+		/* HUANG Implementation */
+
+		.....(my code here).................. 
+		..................................... 
+		..................................... 
+
+		/* == HUANG Implementation */
+
+	5. PLEASE follow the above style when implementing or changing code in the future!
+
+	6. Only when write to console is done (in syscall write implementation) can "printf" be printed on screen. So NO test will pass before implementing it.
+
+	7. Instruction for running a single test under build/:
+	Once you've built your code, navigate to the build directory and issue the command below to run an individual test and compare against 
+	the expected output. You'll have to remove the generated .output and .result files to re-run the test again if you haven't run 
+	make clean.
+	e.g.	make tests/userprog/test-name-here.result
+
+
+	8. Haven't implemented save memory access yet. Seems that save memory access is better to be implemented along the way with memory access
+	   in syscall.c
+
+	9. The next step is to implement syscall.c	I'm still trying to get the whole picture and its details, so no code has been implemented
+	   in syscall.c yet.
+
+	10. In process.c, we has to temporarily (just for now) change process_wait() to an infinite loop (one that waits forever). I haven't done 	      yet, since the make check tests make no sense until we implement write to console in syscall.c
+
+
+HUANG (Feb. 11th):
+	1. prototypes for system calls is referenced to "/src/lib/user/syscall.h"
+
+	2. done with save memory access implementation
+
+	3. I've implemented system call skeleton and partial code
+
+	4. need to implement process_wait() in process.c ASAP!!! if not, not test will pass...
+		process_wait() is called by wait() in syscall.c
+		strongly suggest you to implement process_wait() before implementing any other functions!
+
+	5. already tested argument passing, all passed (was tested one by one with process_wait infinite loop)
+
+
+XIN (Feb. 12th): implemented process_wait()
+	1. Added data structure to "struct thread" @ thread.h, defined new data structure "struct child"
+
+	2. Modified exit() @ syscall.c
+
+	3. Modified process_exit()
+
+	4. Modified process_wait()
+
+	5. Added child to list in exec() @ syscall.c
+
+	6. Initialized the added data structure in init_thread() @ thread.c
+
+	7. Not tested yet
