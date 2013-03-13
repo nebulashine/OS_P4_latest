@@ -364,8 +364,7 @@ inode_open (block_sector_t sector)
   block_read (fs_device, inode->sector, &inode->data);
   */
 	/* our proj4 */
-			//TODO comment out the below line later
-			//TODO find sector for inode_disk, find length and set
+			//find sector for inode_disk, find length and set
 			//     inode.length
   struct inode_disk  data; 
   read_via_cache(inode, (void *)&data, sector, 0, BLOCK_SECTOR_SIZE);
@@ -441,8 +440,94 @@ inode_close (struct inode *inode)
 	  */
 
 
+		/* our proj4  */
 	  // TODO : free all disk sectors which are occupied by files
           // 	    according to disk_inode
+		//figure out level_max
+		int sectors = inode->length / BLOCK_SECTOR_SIZE;
+		int level_max = 0;
+		if(sectors < IDISK_SIZE -2){
+		    level_max=0;
+		}
+		else if (sectors <= 2*IDISK_SIZE-3){
+		    level_max=1;
+		} else if (sectors <= ((IDISK_SIZE+2)*IDISK_SIZE-3) ){ 
+		    level_max=2;
+		} else{
+		    PANIC("too many sectors in inode_close\n");
+		}
+		//free from the depest level: first free_map_release its entries, then it self
+
+		struct inode_disk disk_inode_level0;
+		struct inode_disk disk_inode_level1;
+		struct inode_disk disk_inode_level2;
+
+		//get level0 inode_disk
+		read_via_cache(NULL, (void *)&disk_inode_level0, inode->sector, 0, BLOCK_SECTOR_SIZE);
+
+		//free_map_release double indrect level2's elem and it self, and level2's sector_num
+		if(level_max == 2){
+			//get level2 inode_disk
+			int level2_sector_index = disk_inode_level0.file_sector_index[BLOCK_SECTOR_SIZE - 1];
+			read_via_cache(NULL, (void *)&disk_inode_level2, level2_sector_index, 0, BLOCK_SECTOR_SIZE);
+
+			int total_index_left = sectors - (2*IDISK_SIZE-2);
+			int level2_entry_num = total_index_left/IDISK_SIZE + 1;
+
+			int i = 0;
+			for ( ; i < level2_entry_num; i++){
+				//get level1_sector_index from disk_inode_level2
+				block_sector_t level1_sector_index = 0;
+				level1_sector_index = disk_inode_level2.file_sector_index[i]; 
+				//read level1 inode_disk from cache
+				read_via_cache(NULL, (void *)&disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);
+
+				int level1_index_max = IDISK_SIZE - 1;
+				if(i == level2_entry_num - 1) {
+					level1_index_max = total_index_left%IDISK_SIZE;
+				}
+				int j = 0;
+				for ( ; j <= level1_index_max; j++){
+					int loc_level1_index = disk_inode_level1.file_sector_index[j]; 
+          				free_map_release (loc_level1_index, 1);
+				}				
+
+				//free disk_node_level2[i] (val as ith elem in disk_node_level2) as well
+          			free_map_release (level1_sector_index, 1);
+			}
+			//free disk_node_level0[BLOCK_SECTOR_SIZE - 1] (disk_node_level_2's sector_num) as well
+          		free_map_release (level2_sector_index, 1);
+		}
+
+		//free_map_release single indrect level1's elem and it self
+		if(level_max == 1 || level_max == 2){
+			//get level1 inode_disk
+			int level1_sector_index = disk_inode_level0.file_sector_index[BLOCK_SECTOR_SIZE - 2];
+			read_via_cache(NULL, (void *)&disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);
+
+			int level1_index_max = sectors - (IDISK_SIZE-2);
+			int i = 0;
+			for ( ; i <= level1_index_max; i++){
+				int level1_sector_index = disk_inode_level1.file_sector_index[i];
+          			free_map_release (level1_sector_index, 1);
+			}	
+			//free disk_node_level0[BLOCK_SECTOR_SIZE - 2] (disk_node_level_1's sector_num) as well
+          		free_map_release (level1_sector_index, 1);
+		}
+
+
+		//need to process level0 anyway
+		int level0_index_max = (level_max==0) ? sectors : (IDISK_SIZE-3);
+		int i=0;
+		for ( ; i<=level0_index_max ; i++){
+			int level0_sector_index = disk_inode_level0.file_sector_index[i];
+          		free_map_release (level0_sector_index, 1);
+		}
+
+		//free_map_release level0 itself
+          	free_map_release (inode->sector, 1);
+		/* == our proj4  */
+
         }
 
       free (inode); 
