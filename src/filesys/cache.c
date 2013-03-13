@@ -26,7 +26,8 @@ void inode_free_all(void){
         int i = 0;
         for (; i < BUFFER_SIZE; i++) {
 		if (buffer_info_array[i].dirty) {
-                	if (buffer_info_array[i].sector_num != -2 || buffer_info_array[i].buffer_inode != NULL) {
+                	//if (buffer_info_array[i].sector_num != -2 || buffer_info_array[i].buffer_inode != NULL) {
+                	if (buffer_info_array[i].sector_num != -2) {
                 	        int sector_idx = buffer_info_array[i].sector_num;
                 	        void *buffer_cache_start_addr = buffer_vaddr + i * BLOCK_SECTOR_SIZE;
                 	        block_write (fs_device, sector_idx, buffer_cache_start_addr);
@@ -139,4 +140,111 @@ uint8_t *get_buffer_vaddr(void) {
 
 struct buffer_info *get_buffer_info_array(void) {
 	return buffer_info_array;
+}
+
+
+/*
+ * buffer is the start address in memory to be written from
+ * if used in inode_write_at, buffer = 'buffer' + bytes_written
+ * sector_ofs is the start point to actually write the buffer cache
+ * chunk_size is the actual size to be written to buffer cache
+ */
+void write_via_cache(struct inode *inode, const uint8_t *buffer, 
+		block_sector_t sector_idx, int sector_ofs, int chunk_size) {
+
+	//lookup buffer and check if sector_indx exits in buffer cache
+      int buffer_arr_indx = lookup_sector(sector_idx);	//lookup result indx for a valid sector in cache
+	if (buffer_arr_indx > BUFFER_SIZE) {
+		PANIC("lookup_sector wrong\n");
+	}
+      if (buffer_arr_indx >= 0){ 
+		//if yes, just write buffer cache
+	void *buffer_cache_start_addr = buffer_vaddr + buffer_arr_indx * BLOCK_SECTOR_SIZE + sector_ofs;
+        memcpy (buffer_cache_start_addr, (void *)buffer, chunk_size);
+      } else {			//the sector_idx is not in buffer cache
+	//check if empty sector exists in buffer cache
+	int buffer_indx = lookup_empty_buffer();
+	if (buffer_indx == -1) {
+		//if no, evict sector from buffer cache, and get its indx 
+		//choose a sector to evict
+		//lookup_evict contains 'clock algorithm'
+		//lookup_evict() takes care of case when buffer_evict_indx == -1
+		int buffer_evict_indx = lookup_evict(); 
+			//buffer_evict_indx should be a valid indx
+		buffer_evict_indx = buffer_evict(buffer_evict_indx); 
+		buffer_indx = buffer_evict_indx;
+	}
+		//buffer_cache_start_addr is the start addr of buffer cache sector
+	void *buffer_cache_start_addr = buffer_vaddr + buffer_indx * BLOCK_SECTOR_SIZE;
+		//get sector from disk to buffer cache
+		//copy the sector from disk to buffer cache
+
+      	if (sector_ofs != 0 || chunk_size != BLOCK_SECTOR_SIZE) {
+         		// Write partial sector cache, need to fetch from disk first. 
+        	block_read (fs_device, sector_idx, buffer_cache_start_addr);
+	}
+		//change buffer_cache_start_addr to the offset of buffer cache sector
+	buffer_cache_start_addr += sector_ofs;
+		//write sector to buffer cache 
+		//copy the sector from buffer cache to buffer_read
+        memcpy (buffer_cache_start_addr, (void *)buffer, chunk_size);
+
+		//fill the info into buffer_info_array
+	buffer_info_array[buffer_indx].sector_num = sector_idx;
+	buffer_info_array[buffer_indx].buffer_inode = inode;
+	buffer_info_array[buffer_indx].dirty = true;
+	buffer_info_array[buffer_indx].recentlyUsed = true;
+
+      }
+}
+
+/*
+ * buffer is the start address in memory to be read from
+ * if used in inode_read_at, buffer = 'buffer' + bytes_read
+ * sector_ofs is the start point to actually read from the buffer cache
+ * chunk_size is the actual size to be read to buffer cache
+ */
+void read_via_cache(struct inode *inode, uint8_t *buffer, 
+		block_sector_t sector_idx, int sector_ofs, int chunk_size) {
+
+	//printf("sector_idx %d, size %d\n", sector_idx, size);
+      int buffer_arr_indx = lookup_sector(sector_idx);	//lookup result indx for a valid sector in cache
+	if (buffer_arr_indx > BUFFER_SIZE) {
+		PANIC("lookup_sector wrong\n");
+	}
+//	printf("sector_idx %d\n", sector_idx);
+      if (buffer_arr_indx >= 0){ 
+//	printf("indx %d, sector_idx %d size %d\n", buffer_arr_indx, sector_idx, size);
+	
+	void *buffer_cache_start_addr = buffer_vaddr + buffer_arr_indx * BLOCK_SECTOR_SIZE + sector_ofs;
+	memcpy((void *)buffer, buffer_cache_start_addr, chunk_size);
+      } else {			//the sector_idx is not in buffer cache
+	//printf("new start\n");
+	int buffer_indx = lookup_empty_buffer();
+	if (buffer_indx == -1) {
+		//choose a sector to evict
+		//lookup_evict contains 'clock algorithm'
+		//lookup_evict() takes care of case when buffer_evict_indx == -1
+		int buffer_evict_indx = lookup_evict(); 
+			//buffer_evict_indx should be a valid indx
+		buffer_evict_indx = buffer_evict(buffer_evict_indx); 
+		buffer_indx = buffer_evict_indx;
+		//printf("evicting!\n");
+	}
+		//buffer_cache_start_addr is the start addr of buffer cache sector
+	void *buffer_cache_start_addr = buffer_vaddr + buffer_indx * BLOCK_SECTOR_SIZE;
+		//copy the sector from disk to buffer cache
+        block_read (fs_device, sector_idx, buffer_cache_start_addr);
+		//change buffer_cache_start_addr to the offset of buffer cache sector
+	buffer_cache_start_addr += sector_ofs;
+		//copy the sector from buffer cache to buffer_read
+        memcpy ((void *)buffer, buffer_cache_start_addr, chunk_size);
+
+		//fill the info into buffer_info_array
+	buffer_info_array[buffer_indx].sector_num = sector_idx;
+	buffer_info_array[buffer_indx].buffer_inode = inode;
+	buffer_info_array[buffer_indx].dirty = false;
+	buffer_info_array[buffer_indx].recentlyUsed = true;
+      }
+
 }

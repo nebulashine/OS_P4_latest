@@ -95,7 +95,14 @@ inode_create (block_sector_t sector, off_t length)
       disk_inode->magic = INODE_MAGIC;
       if (free_map_allocate (sectors, &disk_inode->start)) 
         {
+	/* original code
           block_write (fs_device, sector, disk_inode);
+	*/
+
+	/* our proj4 */
+	write_via_cache(NULL, (void *)disk_inode, sector, 0, BLOCK_SECTOR_SIZE);
+	/* == our proj4 */
+
           if (sectors > 0) 
             {
               static char zeros[BLOCK_SECTOR_SIZE];
@@ -143,7 +150,13 @@ inode_open (block_sector_t sector)
   inode->open_cnt = 1;
   inode->deny_write_cnt = 0;
   inode->removed = false;
+  /* original code
   block_read (fs_device, inode->sector, &inode->data);
+  */
+	/* our proj4 */
+			//TODO comment out the below line later 
+  read_via_cache(inode, (void *)&inode->data, sector, 0, BLOCK_SECTOR_SIZE);
+	/* == our proj4 */
   return inode;
 }
 
@@ -182,7 +195,8 @@ inode_close (struct inode *inode)
 	struct buffer_info *buffer_info_array = get_buffer_info_array();
 	int i = 0;
 	for (; i < BUFFER_SIZE; i++) {
-		if (buffer_info_array[i].buffer_inode == inode) {
+		if (buffer_info_array[i].buffer_inode == inode
+		|| buffer_info_array[i].sector_num == inode->sector) {
 			int sector_idx = buffer_info_array[i].sector_num;
 			void *buffer_cache_start_addr = get_buffer_vaddr() + i * BLOCK_SECTOR_SIZE;
                 	block_write (fs_device, sector_idx, buffer_cache_start_addr);
@@ -191,7 +205,7 @@ inode_close (struct inode *inode)
 			buffer_info_array[i].buffer_inode = NULL;
 			buffer_info_array[i].dirty = false;
 			buffer_info_array[i].recentlyUsed = false;
-		}
+		} 
 	}
 
 	/* == our proj4*/
@@ -250,6 +264,9 @@ inode_read_at (struct inode *inode, void *buffer_, off_t size, off_t offset)
         break;
 
 	/* KAI proj4 */
+
+	read_via_cache(inode, buffer + bytes_read, sector_idx, sector_ofs, chunk_size);
+/*
 	//printf("sector_idx %d, size %d\n", sector_idx, size);
       int buffer_arr_indx = lookup_sector(sector_idx);	//lookup result indx for a valid sector in cache
 	if (buffer_arr_indx > BUFFER_SIZE) {
@@ -291,6 +308,7 @@ inode_read_at (struct inode *inode, void *buffer_, off_t size, off_t offset)
 	buffer_info_array[buffer_indx].recentlyUsed = true;
       }
 
+*/
 	/* == KAI proj4 */
 
 	/* original code
@@ -363,6 +381,8 @@ inode_write_at (struct inode *inode, const void *buffer_, off_t size,
 
 	/* our proj4*/
 
+	write_via_cache(inode, buffer + bytes_written, sector_idx, sector_ofs, chunk_size);
+/*
 	//lookup buffer and check if sector_indx exits in buffer cache
       int buffer_arr_indx = lookup_sector(sector_idx);	//lookup result indx for a valid sector in cache
 	if (buffer_arr_indx > BUFFER_SIZE) {
@@ -408,6 +428,7 @@ inode_write_at (struct inode *inode, const void *buffer_, off_t size,
 	buffer_info_array[buffer_indx].recentlyUsed = true;
 
       }
+*/
 	/* == our proj4*/
 
 	/* original code

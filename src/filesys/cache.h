@@ -7,6 +7,7 @@
 #include "threads/palloc.h"
 #include <stdio.h>
 #include "devices/block.h"
+#include <string.h>
 
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 64
@@ -35,4 +36,12 @@ int lookup_evict(void);
 int buffer_evict(int evict_indx);
 uint8_t *get_buffer_vaddr(void);
 struct buffer_info *get_buffer_info_array(void);
+
+void write_via_cache(struct inode *inode, const uint8_t *buffer, 
+		block_sector_t sector_idx, int sector_ofs, int chunk_size);
+
+void read_via_cache(struct inode *inode, uint8_t *buffer, 
+		block_sector_t sector_idx, int sector_ofs, int chunk_size);
+
+
 #endif

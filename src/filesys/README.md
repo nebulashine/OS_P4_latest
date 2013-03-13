@@ -1,6 +1,7 @@
 
 Buffer Cache:
 -----------------------------------
+DONE:
 	modify:
 		inode_read_at()
 		inode_write_at()
@@ -14,6 +15,11 @@ inode.c
 added cache.h
 added cache.c
 
+
+TODO: 
+implement read-ahead (in back ground)
+implement synchronization
+
 Indexed and Extensible Files:
 -----------------------------------
 	add array/indirect arrray in inode struct in inode.c
@@ -25,6 +31,18 @@ Indexed and Extensible Files:
 	when write to end of file, extend the file
 		free_map_allocate();
 
+DONE:
+	modified struct disk_inode
+	modified struct inode
+
+
+TODO:
+	modify inode_create()
+	modify inode_close()
+	modify inode_open()
+	modify inode_length()
+	modify byte_to_setor()
+	
 
 Subdirectories
 -----------------------------------
