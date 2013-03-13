@@ -13,16 +13,40 @@
 /* Identifies an inode. */
 #define INODE_MAGIC 0x494e4f44
 #define BUFFER_SIZE 64
-
+#define IDISK_SIZE 126
 
 /* On-disk inode.
    Must be exactly BLOCK_SECTOR_SIZE bytes long. */
+// inode_disk -- level 0 (DIRECT)
+// extedned (second last element) -- level 1 (INDIRECT)
+// indirect-extended (last element) -- level 2 (level 2 points to level 1) (DOUBLY INDIRECT)
 struct inode_disk
   {
-    block_sector_t start;               /* First data sector. */
+    /* our proj4 */
+
+    // If right now at level 0 (DIRECT)
+    // each array element saves disk sector number where save the file 
+    // the second last array element saves sector number of level 1 struct 'inode_disk'
+    // the last array element saves sector number of level 2 struct 'inode_disk'
+
+    // If at level 1 (INDIRECT)
+    // each array element saves disk sector number where save the file 
+   
+    // If at level 2 (DOUBLY-INDIRECT)
+    // each  array element saves sector number of level 1 struct 'inode_disk'
+     
+    uint32_t file_sector_index[IDISK_SIZE];               // each array element saves disk sector number where save the file //
     off_t length;                       /* File size in bytes. */
     unsigned magic;                     /* Magic number. */
-    uint32_t unused[125];               /* Not used. */
+   
+    /* == our project4 */
+
+    /* original code
+    block_sector_t start;               // First data sector. //
+    off_t length;                       // File size in bytes. /
+    unsigned magic;                     // Magic number. /
+    uint32_t unused[125];               // Not used. /
+    */
   };
 
 /* Returns the number of sectors to allocate for an inode SIZE
@@ -41,21 +65,97 @@ struct inode
     int open_cnt;                       /* Number of openers. */
     bool removed;                       /* True if deleted, false otherwise. */
     int deny_write_cnt;                 /* 0: writes ok, >0: deny writes. */
-    struct inode_disk data;             /* Inode content. */
+    /* original code
+    struct inode_disk data;             // Inode content. /
+    */
+
+    /* our proj4 */
+    off_t length; 			/* the total length of the file */
+    /* == our proj4 */   
   };
 
 /* Returns the block device sector that contains byte offset POS
    within INODE.
    Returns -1 if INODE does not contain data for a byte at offset
    POS. */
+// TODO: check file sector from our new structure
 static block_sector_t
 byte_to_sector (const struct inode *inode, off_t pos) 
 {
   ASSERT (inode != NULL);
+
+  /* our proj4 */
+  
+  /* psuedo-code
+   *  ARRAY means file_sector_index[IDISK_SIZE] in inode_disk 
+   *
+   * 1. find which array element to lookup in LEVEL 0 inode_disk structure,  determine by 'pos/BLOCK_SECTOR_SIZE'
+   * 2. if array element index is smaller than (IDISK_SIZE-2), return array element value (sector index)
+   * 3. if array element index is between [IDISK_SIZE-2, 2*IDISK_SIZE-3], go to LEVEL1 inode_disk_structure and return array element value (sector index)
+   * 4. if array element index is larger than (2*IDISK_SIZE-3), go to doubly indirect LEVEL2 inode_disk_structure, and then go to its indirct LEVEL1 inode_
+        disk_structure
+   * In detail for LEVEL 2 structure
+   * [2*IDISK_SIZE-2 + 0*IDISK_SIZE, 2*IDISK_SIZE-2 + 1*IDISK_SIZE-1]  
+   * [2*IDISK_SIZE-2 + 1*IDISK_SIZE, 2*IDISK_SIZE-2 + 2*IDISK_SIZE-1]  
+   * [2*IDISK_SIZE-2 + 2*IDISK_SIZE, 2*IDISK_SIZE-2 + 3*IDISK_SIZE-1]  
+   * ....
+   * [2*IDISK_SIZE-2 + (IDISK_SIZE-1)*IDISK_SIZE, 2*IDISK_SIZE-2 + IDISK_SIZE*IDISK_SIZE-1]  
+   * 
+   */
+  if (pos < inode->length){
+    struct inode_disk level0_inode_disk;
+    read_via_cache(NULL, (void *)&level0_inode_disk, inode->sector, 0, BLOCK_SECTOR_SIZE);
+    // step 1. get array element index
+    int total_index_of_sector_num = pos/BLOCK_SECTOR_SIZE;
+    if (total_index_of_sector_num < IDISK_SIZE-2){
+	// step 2. check in LEVEL 0 structure
+	block_sector_t result = level0_inode_disk.file_sector_index[total_index_of_sector_num];
+	return result;
+    }
+    else if(total_index_of_sector_num <= (2*IDISK_SIZE-3) ){
+	// step 3. check in LEVEL 1 structure
+	int level1_index = total_index_of_sector_num - (IDISK_SIZE-2);
+
+	struct inode_disk level1_inode_disk;
+	block_sector_t level0_second_last_val = level0_inode_disk.file_sector_index[IDISK_SIZE-2];
+        read_via_cache(NULL, (void *)&level1_inode_disk, level0_second_last_val, 0, BLOCK_SECTOR_SIZE);
+	block_sector_t result = level1_inode_disk.file_sector_index[level1_index];
+	return result; 	
+    } else if(total_index_of_sector_num <= ((IDISK_SIZE+2)*IDISK_SIZE-3) ){
+	//step 4. check in LEVEL2 -> LEVEL1 structure
+	int total_index_left = total_index_of_sector_num - (2*IDISK_SIZE-2);
+	int level2_index = total_index_left/IDISK_SIZE;
+	int level1_index = total_index_left%IDISK_SIZE;
+
+	block_sector_t level0_last_val = level0_inode_disk.file_sector_index[IDISK_SIZE-1];	
+	struct inode_disk level2_inode_disk;
+        read_via_cache(NULL, (void *)&level2_inode_disk, level0_last_val, 0, BLOCK_SECTOR_SIZE);
+	
+	block_sector_t level2_val = level2_inode_disk.file_sector_index[level2_index];
+	struct inode_disk level1_inode_disk;
+        read_via_cache(NULL, (void *)&level1_inode_disk, level2_val, 0, BLOCK_SECTOR_SIZE);
+	
+	// result is actually level1_val
+	block_sector_t result = level1_inode_disk.file_sector_index[level1_index];
+	return result;	
+
+    } else {
+	PANIC("position too large!\n");
+    }
+  }
+  else
+    return -1;
+
+  /* ==  our proj4 */
+
+
+
+  /* original code
   if (pos < inode->data.length)
     return inode->data.start + pos / BLOCK_SECTOR_SIZE;
   else
     return -1;
+  */
 }
 
 /* List of open inodes, so that opening a single inode twice
@@ -93,16 +193,10 @@ inode_create (block_sector_t sector, off_t length)
       size_t sectors = bytes_to_sectors (length);
       disk_inode->length = length;
       disk_inode->magic = INODE_MAGIC;
+      /* original code 
       if (free_map_allocate (sectors, &disk_inode->start)) 
-        {
-	/* original code
+	{
           block_write (fs_device, sector, disk_inode);
-	*/
-
-	/* our proj4 */
-	write_via_cache(NULL, (void *)disk_inode, sector, 0, BLOCK_SECTOR_SIZE);
-	/* == our proj4 */
-
           if (sectors > 0) 
             {
               static char zeros[BLOCK_SECTOR_SIZE];
@@ -112,15 +206,131 @@ inode_create (block_sector_t sector, off_t length)
                 block_write (fs_device, disk_inode->start + i, zeros);
             }
           success = true; 
-        } 
-      free (disk_inode);
+        }
+      */
+      
+      /* our proj4 */
+      // allocate originally true, use a for loop to try allocate, use an array to 
+      // to keep track what disk sectors has been assigned
+      // if any failed, then free all disk sector according to the array
+      // if success, then insert disk_inode according to the array
+      bool allocate_success = true;
+      block_sector_t allocated_disk_sector_index[sectors];
+      int num_allocated = 0;
+      while (num_allocated < sectors){
+	allocate_success = free_map_allocate(1, allocated_disk_sector_index+num_allocated);	
+	if(!allocate_success) break;
+	num_allocated++;
+      }
+
+      if(allocate_success)
+      {
+		// insert disk_inode according to array
+		// given index in array => determine disk_inode index => copy sector_num in
+		int level_max = 0;
+		if(sectors < IDISK_SIZE -2){
+		    level_max=0;
+		}
+		else if (sectors <= 2*IDISK_SIZE-3){
+		    level_max=1;
+		} else if (sectors <= ((IDISK_SIZE+2)*IDISK_SIZE-3) ){ 
+		    level_max=2;
+		} else{
+		    PANIC("too many sectors in inode_create\n");
+		}
+			
+  		struct inode_disk *disk_inode_level1 = NULL;	//for level 1 disk inode
+  		struct inode_disk *disk_inode_level2 = NULL;	//for level 2 disk inode
+
+		if (level_max == 1) {
+  			disk_inode_level1 = calloc (1, sizeof *disk_inode_level1);
+		}
+		if (level_max == 2) {
+  			disk_inode_level2 = calloc (1, sizeof *disk_inode_level2);
+		}
+		
+		// START INSERT INODE_DISK HERE
+
+		// insert LEVEL 0 inode_disk
+		int level0_index_max = (level_max==0) ? sectors : (IDISK_SIZE-3);
+		int i=0;
+		for ( ; i<=level0_index_max ; i++){
+			disk_inode->file_sector_index[i] = allocated_disk_sector_index[i];
+		}
+
+		// insert LEVEL 1 inode_disk
+		if(level_max == 1){
+			block_sector_t level1_sector_index = 0;
+			free_map_allocate(1, &level1_sector_index); // TODO: if free_map_allocate is NOT successful, free_map_release()
+			disk_inode->file_sector_index[IDISK_SIZE-2] = level1_sector_index; // ADD level1 sector num to 'second last' of LEVEL 0
+			int level1_index_max = sectors - (IDISK_SIZE-2);
+			int i = 0;
+			for ( ; i <= level1_index_max; i++){
+				disk_inode_level1->file_sector_index[i] = allocated_disk_sector_index[i + (IDISK_SIZE-2)];
+			}	
+		}
+
+		// insert LEVEL 2 inode_disk
+		if(level_max == 2){
+			block_sector_t level2_sector_index = 0;
+			free_map_allocate(1, &level2_sector_index); // TODO: if free_map_allocate is NOT successful, free_map_release()
+			disk_inode->file_sector_index[IDISK_SIZE-1] = level2_sector_index; // ADD level2 sector num to 'last' of LEVEL 0
+			
+			int total_index_left = sectors - (2*IDISK_SIZE-2);
+			int level2_entry_num = total_index_left/IDISK_SIZE + 1;
+
+			int i = 0;
+			for ( ; i < level2_entry_num; i++){
+				block_sector_t level1_sector_index = 0;
+				free_map_allocate(1, &level1_sector_index); // TODO: if free_map_allocate is NOT successful, free_map_release()
+				disk_inode_level2->file_sector_index[i] = level1_sector_index; // ADD level1 sector num to 'i' of LEVEL2
+
+				int level1_index_max = IDISK_SIZE - 1;
+				if(i == level2_entry_num - 1) {
+					level1_index_max = total_index_left%IDISK_SIZE;
+				}
+				int j = 0;
+				for ( ; j <= level1_index_max; j++){
+					int loc_level1_index = 2*IDISK_SIZE-2 + i*IDISK_SIZE + j;
+					disk_inode_level1->file_sector_index[j] = allocated_disk_sector_index[loc_level1_index];
+				}				
+				write_via_cache(NULL, (void *)disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);
+			}	
+
+		}
+
+		// after all insertion, write_via_cache()
+		// END INSERT INODE_DISK HERE 
+		
+		write_via_cache(NULL, (void *)disk_inode, sector, 0, BLOCK_SECTOR_SIZE);
+
+		if (level_max == 1) {
+			block_sector_t level1_sector_index = disk_inode->file_sector_index[IDISK_SIZE-2]; 
+			write_via_cache(NULL, (void *)disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);	
+  			free(disk_inode_level1);
+		}
+		if (level_max == 2) { // write LEVEL2 here, LEVEL 1 has been written in if(level_max == 2)
+			block_sector_t level2_sector_index = disk_inode->file_sector_index[IDISK_SIZE-1]; 
+			write_via_cache(NULL, (void *)disk_inode_level2, level2_sector_index, 0, BLOCK_SECTOR_SIZE);		
+  			free(disk_inode_level2);
+		}
+		
+       } else{
+		num_allocated--;
+	      while(num_allocated >= 0){
+		free_map_release(allocated_disk_sector_index[num_allocated], 1);
+	      }
+       }
+	/* == our proj4 */ 
+	
+        free (disk_inode);
     }
   return success;
 }
 
 /* Reads an inode from SECTOR
    and returns a `struct inode' that contains it.
-   Returns a null pointer if memory allocation fails. */
+   /Returns a null pointer if memory allocation fails. */
 struct inode *
 inode_open (block_sector_t sector)
 {
@@ -154,9 +364,17 @@ inode_open (block_sector_t sector)
   block_read (fs_device, inode->sector, &inode->data);
   */
 	/* our proj4 */
-			//TODO comment out the below line later 
-  read_via_cache(inode, (void *)&inode->data, sector, 0, BLOCK_SECTOR_SIZE);
+			//TODO comment out the below line later
+			//TODO find sector for inode_disk, find length and set
+			//     inode.length
+  struct inode_disk  data; 
+  read_via_cache(inode, (void *)&data, sector, 0, BLOCK_SECTOR_SIZE);
+  inode->length = data.length;
 	/* == our proj4 */
+  
+  /* original code 
+  read_via_cache(inode, (void *)&inode->data, sector, 0, BLOCK_SECTOR_SIZE);
+  */
   return inode;
 }
 
@@ -216,9 +434,15 @@ inode_close (struct inode *inode)
       /* Deallocate blocks if removed. */
       if (inode->removed) 
         {
+	  /* original code
           free_map_release (inode->sector, 1);
           free_map_release (inode->data.start,
                             bytes_to_sectors (inode->data.length)); 
+	  */
+
+
+	  // TODO : free all disk sectors which are occupied by files
+          // 	    according to disk_inode
         }
 
       free (inode); 
@@ -266,49 +490,7 @@ inode_read_at (struct inode *inode, void *buffer_, off_t size, off_t offset)
 	/* KAI proj4 */
 
 	read_via_cache(inode, buffer + bytes_read, sector_idx, sector_ofs, chunk_size);
-/*
-	//printf("sector_idx %d, size %d\n", sector_idx, size);
-      int buffer_arr_indx = lookup_sector(sector_idx);	//lookup result indx for a valid sector in cache
-	if (buffer_arr_indx > BUFFER_SIZE) {
-		PANIC("lookup_sector wrong\n");
-	}
-//	printf("sector_idx %d\n", sector_idx);
-      if (buffer_arr_indx >= 0){ 
-//	printf("indx %d, sector_idx %d size %d\n", buffer_arr_indx, sector_idx, size);
-	
-	void *buffer_cache_start_addr = get_buffer_vaddr() + buffer_arr_indx * BLOCK_SECTOR_SIZE + sector_ofs;
-	memcpy(buffer+bytes_read, buffer_cache_start_addr, chunk_size);
-      } else {			//the sector_idx is not in buffer cache
-	//printf("new start\n");
-	int buffer_indx = lookup_empty_buffer();
-	if (buffer_indx == -1) {
-		//choose a sector to evict
-		//lookup_evict contains 'clock algorithm'
-		//lookup_evict() takes care of case when buffer_evict_indx == -1
-		int buffer_evict_indx = lookup_evict(); 
-			//buffer_evict_indx should be a valid indx
-		buffer_evict_indx = buffer_evict(buffer_evict_indx); 
-		buffer_indx = buffer_evict_indx;
-		//printf("evicting!\n");
-	}
-		//buffer_cache_start_addr is the start addr of buffer cache sector
-	void *buffer_cache_start_addr = get_buffer_vaddr() + buffer_indx * BLOCK_SECTOR_SIZE;
-		//copy the sector from disk to buffer cache
-        block_read (fs_device, sector_idx, buffer_cache_start_addr);
-		//change buffer_cache_start_addr to the offset of buffer cache sector
-	buffer_cache_start_addr += sector_ofs;
-		//copy the sector from buffer cache to buffer_read
-        memcpy (buffer + bytes_read, buffer_cache_start_addr, chunk_size);
 
-		//fill the info into buffer_info_array
-	struct buffer_info *buffer_info_array = get_buffer_info_array();
-	buffer_info_array[buffer_indx].sector_num = sector_idx;
-	buffer_info_array[buffer_indx].buffer_inode = inode;
-	buffer_info_array[buffer_indx].dirty = false;
-	buffer_info_array[buffer_indx].recentlyUsed = true;
-      }
-
-*/
 	/* == KAI proj4 */
 
 	/* original code
@@ -382,53 +564,7 @@ inode_write_at (struct inode *inode, const void *buffer_, off_t size,
 	/* our proj4*/
 
 	write_via_cache(inode, buffer + bytes_written, sector_idx, sector_ofs, chunk_size);
-/*
-	//lookup buffer and check if sector_indx exits in buffer cache
-      int buffer_arr_indx = lookup_sector(sector_idx);	//lookup result indx for a valid sector in cache
-	if (buffer_arr_indx > BUFFER_SIZE) {
-		PANIC("lookup_sector wrong\n");
-	}
-      if (buffer_arr_indx >= 0){ 
-		//if yes, just write buffer cache
-	void *buffer_cache_start_addr = get_buffer_vaddr() + buffer_arr_indx * BLOCK_SECTOR_SIZE + sector_ofs;
-        memcpy (buffer_cache_start_addr, buffer + bytes_written, chunk_size);
-      } else {			//the sector_idx is not in buffer cache
-	//check if empty sector exists in buffer cache
-	int buffer_indx = lookup_empty_buffer();
-	if (buffer_indx == -1) {
-		//if no, evict sector from buffer cache, and get its indx 
-		//choose a sector to evict
-		//lookup_evict contains 'clock algorithm'
-		//lookup_evict() takes care of case when buffer_evict_indx == -1
-		int buffer_evict_indx = lookup_evict(); 
-			//buffer_evict_indx should be a valid indx
-		buffer_evict_indx = buffer_evict(buffer_evict_indx); 
-		buffer_indx = buffer_evict_indx;
-	}
-		//buffer_cache_start_addr is the start addr of buffer cache sector
-	void *buffer_cache_start_addr = get_buffer_vaddr() + buffer_indx * BLOCK_SECTOR_SIZE;
-		//get sector from disk to buffer cache
-		//copy the sector from disk to buffer cache
 
-      	if (sector_ofs != 0 || chunk_size != BLOCK_SECTOR_SIZE) {
-         		// Write partial sector cache, need to fetch from disk first. 
-        	block_read (fs_device, sector_idx, buffer_cache_start_addr);
-	}
-		//change buffer_cache_start_addr to the offset of buffer cache sector
-	buffer_cache_start_addr += sector_ofs;
-		//write sector to buffer cache 
-		//copy the sector from buffer cache to buffer_read
-        memcpy (buffer_cache_start_addr, buffer + bytes_written, chunk_size);
-
-		//fill the info into buffer_info_array
-	struct buffer_info *buffer_info_array = get_buffer_info_array();
-	buffer_info_array[buffer_indx].sector_num = sector_idx;
-	buffer_info_array[buffer_indx].buffer_inode = inode;
-	buffer_info_array[buffer_indx].dirty = true;
-	buffer_info_array[buffer_indx].recentlyUsed = true;
-
-      }
-*/
 	/* == our proj4*/
 
 	/* original code
@@ -499,5 +635,8 @@ inode_allow_write (struct inode *inode)
 off_t
 inode_length (const struct inode *inode)
 {
+  return inode->length;
+  /* original code
   return inode->data.length;
+  */
 }
