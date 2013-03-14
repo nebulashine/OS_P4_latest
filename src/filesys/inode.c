@@ -15,6 +15,7 @@
 #define BUFFER_SIZE 64
 #define IDISK_SIZE 126
 
+
 /* On-disk inode.
    Must be exactly BLOCK_SECTOR_SIZE bytes long. */
 // inode_disk -- level 0 (DIRECT)
@@ -106,8 +107,8 @@ byte_to_sector (const struct inode *inode, off_t pos)
     struct inode_disk level0_inode_disk;
     read_via_cache(NULL, (void *)&level0_inode_disk, inode->sector, 0, BLOCK_SECTOR_SIZE);
     // step 1. get array element index
-    //int total_index_of_sector_num = pos/BLOCK_SECTOR_SIZE;
-    int total_index_of_sector_num = bytes_to_sectors (pos) - 1;
+    int total_index_of_sector_num = pos/BLOCK_SECTOR_SIZE;
+
     if (total_index_of_sector_num < IDISK_SIZE-2){
 	// step 2. check in LEVEL 0 structure
 	block_sector_t result = level0_inode_disk.file_sector_index[total_index_of_sector_num];
@@ -208,8 +209,6 @@ inode_create (block_sector_t sector, off_t length)
             }
           success = true; 
         }
-  }
-  return success;
       */
       
       /* our proj4 */
@@ -222,10 +221,11 @@ inode_create (block_sector_t sector, off_t length)
       int num_allocated = 0;
       while (num_allocated < sectors){
 	allocate_success = free_map_allocate(1, &allocated_disk_sector_index[num_allocated]);	
-	printf("sector_num %d\n", allocated_disk_sector_index[num_allocated]);
 	if(!allocate_success) break;
 	num_allocated++;
       }
+
+	sectors = (length - 1) / BLOCK_SECTOR_SIZE;
 
       if(allocate_success)
       {
@@ -257,7 +257,7 @@ inode_create (block_sector_t sector, off_t length)
 
 		// insert LEVEL 0 inode_disk
 							//0313	//means modified on this day
-		int level0_index_max = (level_max==0) ? (sectors-1) : (IDISK_SIZE-3);
+		int level0_index_max = (level_max==0) ? sectors : (IDISK_SIZE-3);
 		int i=0;
 		for ( ; i<=level0_index_max ; i++){
 			disk_inode->file_sector_index[i] = allocated_disk_sector_index[i];
@@ -270,7 +270,7 @@ inode_create (block_sector_t sector, off_t length)
 			disk_inode->file_sector_index[IDISK_SIZE-2] = level1_sector_index; // ADD level1 sector num to 'second last' of LEVEL 0
 						//0313	//means modified on this day
 			int level1_index_max = (level_max == 1) ? 
-						sectors - 1 - (IDISK_SIZE-2) :
+						sectors - (IDISK_SIZE-2) :
 						IDISK_SIZE - 1;
 			int i = 0;
 			for ( ; i <= level1_index_max; i++){
@@ -285,7 +285,7 @@ inode_create (block_sector_t sector, off_t length)
 			disk_inode->file_sector_index[IDISK_SIZE-1] = level2_sector_index; // ADD level2 sector num to 'last' of LEVEL 0
 			
 						//0313	//means modified on this day
-			int total_index_left = sectors - 1 - (2*IDISK_SIZE-2);
+			int total_index_left = sectors - (2*IDISK_SIZE-2);
 			int level2_entry_num = total_index_left/IDISK_SIZE + 1;
 
 			int i = 0;
@@ -323,7 +323,7 @@ inode_create (block_sector_t sector, off_t length)
 			write_via_cache(NULL, (void *)disk_inode_level2, level2_sector_index, 0, BLOCK_SECTOR_SIZE);		
   			free(disk_inode_level2);
 		}
-		
+        	success = true; 
        } else{
 		num_allocated--;
 	      while(num_allocated >= 0){
@@ -333,7 +333,6 @@ inode_create (block_sector_t sector, off_t length)
 	/* == our proj4 */ 
 	
         free (disk_inode);
-        success = true; 
     }
   return success;
 }
@@ -377,7 +376,7 @@ inode_open (block_sector_t sector)
 			//find sector for inode_disk, find length and set
 			//     inode.length
   struct inode_disk  data; 
-  read_via_cache(inode, (void *)&data, sector, 0, BLOCK_SECTOR_SIZE);
+  read_via_cache(NULL, (void *)&data, sector, 0, BLOCK_SECTOR_SIZE);
   inode->length = data.length;
 	/* == our proj4 */
   
@@ -425,11 +424,7 @@ inode_close (struct inode *inode)
 	for (; i < BUFFER_SIZE; i++) {
 		if (buffer_info_array[i].buffer_inode == inode
 		|| buffer_info_array[i].sector_num == inode->sector) {
-			if (buffer_info_array[i].buffer_inode == inode) printf("1111\n");
-			if (buffer_info_array[i].sector_num == inode->sector) printf("2222\n");
 			int sector_idx = buffer_info_array[i].sector_num;
-			printf("sector_idx = %d\n", sector_idx);
-			printf("inode length = %d\n", inode->length);
 			void *buffer_cache_start_addr = get_buffer_vaddr() + i * BLOCK_SECTOR_SIZE;
                 	block_write (fs_device, sector_idx, buffer_cache_start_addr);
 
@@ -439,7 +434,6 @@ inode_close (struct inode *inode)
 			buffer_info_array[i].recentlyUsed = false;
 		} 
 	}
-	printf("for loop finished\n");
 
 	/* == our proj4*/
 
@@ -461,7 +455,7 @@ inode_close (struct inode *inode)
           // 	    according to disk_inode
 		//figure out level_max
 		//here sectors is actually index
-		int sectors = inode->length / BLOCK_SECTOR_SIZE;
+		int sectors = (inode->length - 1) / BLOCK_SECTOR_SIZE;
 		int level_max = 0;
 		if(sectors < IDISK_SIZE -2){
 		    level_max=0;

@@ -241,6 +241,7 @@ void read_via_cache(struct inode *inode, uint8_t *buffer,
         memcpy ((void *)buffer, buffer_cache_start_addr, chunk_size);
 
 		//fill the info into buffer_info_array
+	if(sector_idx < -2)
 	buffer_info_array[buffer_indx].sector_num = sector_idx;
 	buffer_info_array[buffer_indx].buffer_inode = inode;
 	buffer_info_array[buffer_indx].dirty = false;
