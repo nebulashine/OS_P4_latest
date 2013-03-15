@@ -1,0 +1,245 @@
+       	 +-------------------------+
+		     | CS 140                  |
+		     | PROJECT 4: FILE SYSTEMS |
+		     | DESIGN DOCUMENT         |
+		     +-------------------------+
+
+---- GROUP ----
+
+>> Fill in the names and email addresses of your group members.
+
+Kai Zang <kaizang@stanford.edu>
+Huang Song <huangs@stanford.edu>
+Xin Lei <leixin@stanford.edu>
+
+---- PRELIMINARIES ----
+
+>> If you have any preliminary comments on your submission, notes for the
+>> TAs, or extra credit, please give them here.
+
+We accidentally delete the DESIGNDOC, so sorry that late a few minutes
+
+>> Describe briefly which parts of the assignment were implemented by
+>> each member of your team. If some team members contributed significantly
+>> more or less than others (e.g. 2x), indicate that here.
+
+
+>> Please cite any offline or online sources you consulted while
+>> preparing your submission, other than the Pintos documentation, course
+>> text, lecture notes, and course staff.
+
+		     INDEXED AND EXTENSIBLE FILES
+		     ============================
+
+---- DATA STRUCTURES ----
+
+>> A1: Copy here the declaration of each new or changed `struct' or
+>> `struct' member, global or static variable, `typedef', or
+>> enumeration.  Identify the purpose of each in 25 words or less.
+
+struct inode_disk
+  {
+    uint32_t file_sector_index[IDISK_SIZE];               // each array element
+			 saves disk sector number where save the file //
+    off_t length;                       /* File size in bytes. */
+    unsigned magic;                     /* Magic number. */
+}
+
+struct inode
+  {
+   
+    /* original code
+    struct inode_disk data;             // delete struct inode_disk
+    */
+
+    /* our proj4 */
+    off_t length;                       /* the total length of the file */
+    /* == our proj4 */
+  };
+
+
+>> A2: What is the maximum size of a file supported by your inode
+>> structure?  Show your work.
+
+We utilize the direct, indirect and doubly indirect structure. For a single file
+in the disk. There is 1 block for free-map disk_inode, 1 for free-map, (1+1+2^7)
+for file inode_disk, 1 for directory. So the largest file possible is
+
+2^23 - 512*(5+2^7) ~ 7.935Mbytes.
+
+
+
+---- SYNCHRONIZATION ----
+
+>> A3: Explain how your code avoids a race if two processes attempt to
+>> extend a file at the same time.
+
+We will use the lock for file extension operation
+
+>> A4: Suppose processes A and B both have file F open, both
+>> positioned at end-of-file.  If A reads and B writes F at the same
+>> time, A may read all, part, or none of what B writes.  However, A
+>> may not read data other than what B writes, e.g. if B writes
+>> nonzero data, A is not allowed to see all zeros.  Explain how your
+>> code avoids this race.
+
+>> A5: Explain how your synchronization design provides "fairness".
+>> File access is "fair" if readers cannot indefinitely block writers
+>> or vice versa.  That is, many processes reading from a file cannot
+>> prevent forever another process from writing the file, and many
+>> processes writing to a file cannot prevent another process forever
+>> from reading the file.
+
+---- RATIONALE ----
+
+>> A6: Is your inode structure a multilevel index?  If so, why did you
+>> choose this particular combination of direct, indirect, and doubly
+>> indirect blocks?  If not, why did you choose an alternative inode
+>> structure, and what advantages and disadvantages does your
+>> structure have, compared to a multilevel index?
+
+Yes. This is because direct, indirect and doubly indirect inode_disk structure
+has the tradeoff for search time and large file capacity. If the file is small,
+search time is about linear, while it can hold at least 2^7 * 2^7 * 2^9 bytes = 
+2^23 bytes = 8Mbytes, which is enough for our file system.
+
+			    SUBDIRECTORIES
+			    ==============
+
+---- DATA STRUCTURES ----
+
+>> B1: Copy here the declaration of each new or changed `struct' or
+>> `struct' member, global or static variable, `typedef', or
+>> enumeration.  Identify the purpose of each in 25 words or less.
+
+---- ALGORITHMS ----
+
+>> B2: Describe your code for traversing a user-specified path.  How
+>> do traversals of absolute and relative paths differ?
+
+---- SYNCHRONIZATION ----
+
+>> B4: How do you prevent races on directory entries?  For example,
+>> only one of two simultaneous attempts to remove a single file
+>> should succeed, as should only one of two simultaneous attempts to
+>> create a file with the same name, and so on.
+
+>> B5: Does your implementation allow a directory to be removed if it
+>> is open by a process or if it is in use as a process's current
+>> working directory?  If so, what happens to that process's future
+>> file system operations?  If not, how do you prevent it?
+
+---- RATIONALE ----
+
+>> B6: Explain why you chose to represent the current directory of a
+>> process the way you did.
+
+			     BUFFER CACHE
+			     ============
+
+---- DATA STRUCTURES ----
+
+>> C1: Copy here the declaration of each new or changed `struct' or
+>> `struct' member, global or static variable, `typedef', or
+>> enumeration.  Identify the purpose of each in 25 words or less.
+
+struct buffer_info{
+    struct inode * buffer_inode; // inode for reference file
+    block_sector_t sector_num; // sector of data original saved on disk (unique)
+                  // put to -2 as initial value, means this hasn't been occupied
+    bool dirty;    //dirty == 1: cache sector and disk sector are not consistant
+        
+    bool recentlyUsed;
+       //recentlyUsed: whenever sector is read/write from buffer cache, set true
+       //in lookup_evict(), recentlyUsed is set to false by clock algorithm
+};
+
+//buffer_vaddr is the pointer at buffer cache (start addr of 8 continuous pages)
+static uint8_t *buffer_vaddr = NULL;
+//keep track of all buffer info
+static struct buffer_info buffer_info_array[BUFFER_SIZE]; 
+
+
+---- ALGORITHMS ----
+
+>> C2: Describe how your cache replacement algorithm chooses a cache
+>> block to evict.
+
+We use 'clock algorithm':
+ 	//1. sequentially check if is recentlyUsed, if it is , set to to false,
+        //      until find a buffer cache sector that is not recentlyUsed
+        //2. after get the one not recentlyUsed, check if it is dirty
+        //3. if not dirty, return the indx,
+        //4. else if dirty, write it back to disk,
+        //5. jump to 1
+        //so, the return result should always be a valid buffer cache indx
+
+
+>> C3: Describe your implementation of write-behind.
+
+We use write_via_check() and read_via_check() interface function to replace 
+block_read() and block_write(), so that when a process tris to revise the file
+content it is actually revising ones in buffer cache. When inode_close() has 
+been called (file close) or filesys_done() (system halt), we sequentially check
+buffer cache and write the changed sector to disk. Later on, we will implement
+timer_sleep() function.
+
+>> C4: Describe your implementation of read-ahead.
+
+---- SYNCHRONIZATION ----
+
+>> C5: When one process is actively reading or writing data in a
+>> buffer cache block, how are other processes prevented from evicting
+>> that block?
+
+We use bool RecentlyUsed in buffer cache structure as a flag. Whenever a buffer
+cache block has been written or read, RecentlyUsed flag will be set true. So in
+the clock algorithm, when we found a RecentlyUsed flag we set it false. During 
+the time we finish a loop search, if the cache block is actively reading for 
+writing, its RecentlyUsed will be set true again so that we will not use this 
+one after one loop search.
+
+>> C6: During the eviction of a block from the cache, how are other
+>> processes prevented from attempting to access the block?
+
+When a buffer cache block has been evicted its corresponding disk sector number
+will be changed to -3 so that this block will not be found by lookup_empty() or 
+lookup_evict() function.
+
+---- RATIONALE ----
+
+>> C7: Describe a file workload likely to benefit from buffer caching,
+>> and workloads likely to benefit from read-ahead and write-behind.
+
+File growth benefits from buffer caching since we need to update disk_inode info
+all the time.
+
+If user choose to sequentially reads a file information, read-ahead will help a 
+lot, especially this is a large file.
+
+If user is editing a file, then write back helps because it will save the times
+the contents being written to disk.
+
+			   SURVEY QUESTIONS
+			   ================
+
+Answering these questions is optional, but it will help us improve the
+course in future quarters.  Feel free to tell us anything you
+want--these questions are just to spur your thoughts.  You may also
+choose to respond anonymously in the course evaluations at the end of
+the quarter.
+
+>> In your opinion, was this assignment, or any one of the three problems
+>> in it, too easy or too hard?  Did it take too long or too little time?
+
+>> Did you find that working on a particular part of the assignment gave
+>> you greater insight into some aspect of OS design?
+
+>> Is there some particular fact or hint we should give students in
+>> future quarters to help them solve the problems?  Conversely, did you
+>> find any of our guidance to be misleading?
+
+>> Do you have any suggestions for the TAs to more effectively assist
+>> students in future quarters?
+
+>> Any other comments?

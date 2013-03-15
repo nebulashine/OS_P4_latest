@@ -716,7 +716,7 @@ inode_write_at (struct inode *inode, const void *buffer_, off_t size,
   free (bounce);	
 	*/
 
-	printf("bytes_written %d, size %d\n", bytes_written, size);
+//	printf("bytes_written %d, size %d\n", bytes_written, size);
   return bytes_written;
 }
 
@@ -770,7 +770,7 @@ bool allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_
       // if success, then insert disk_inode according to the array
 
       off_t old_length = inode->length; //before alloc new disks 
-      off_t new_length = offset+size+1; //new POSSIBLE length
+      off_t new_length = offset+size; //new POSSIBLE length
       int existing_sector_num = bytes_to_sectors(old_length);
       int future_possible_total_sector_num  = bytes_to_sectors(offset+size);
       int sectors_to_be_alloc = future_possible_total_sector_num - existing_sector_num;
@@ -824,9 +824,6 @@ bool allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_
 		}
 
 		struct inode_disk *disk_inode_level0 = NULL;	//for level 1 disk inode
-		//read_via_cache disk_inode_level0, it needs to be read anyway
-		read_via_cache(inode, (void *)disk_inode_level0, inode->sector, 0, BLOCK_SECTOR_SIZE);
-
 		struct inode_disk *disk_inode_level1 = NULL;	//for level 1 disk inode
 		struct inode_disk *disk_inode_level2 = NULL;	//for level 2 disk inode
 		struct inode_disk *disk_inode_level2_level1 = NULL;	//for level 2's level1  disk inode

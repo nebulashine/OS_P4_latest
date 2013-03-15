@@ -116,7 +116,8 @@ int lookup_evict(void){
 		//write the cache sector back to disk 
 		int sector_idx = buffer_info_array[i].sector_num;
 		void *buffer_cache_start_addr = buffer_vaddr + i * BLOCK_SECTOR_SIZE;
-          	block_write (fs_device, sector_idx, buffer_cache_start_addr);
+		if (sector_idx >= 0)
+	          	block_write (fs_device, sector_idx, buffer_cache_start_addr);
 			//mark buffer_info_arr.dirty as clean since just wrote back
 		buffer_info_array[i].dirty = false;
 	

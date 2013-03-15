@@ -1,0 +1,1723 @@
+warning: test tests/userprog/sc-boundary-3 doesn't count for grading
+warning: test tests/userprog/exec-bound doesn't count for grading
+warning: test tests/userprog/exec-bound-3 doesn't count for grading
+warning: test tests/userprog/exec-bound-2 doesn't count for grading
+TOTAL TESTING SCORE: 55.4%
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+SUMMARY BY TEST SET
+
+Test Set                                      Pts Max  % Ttl  % Max
+--------------------------------------------- --- --- ------ ------
+tests/filesys/extended/Rubric.functionality    18/ 34  15.9%/ 30.0%
+tests/filesys/extended/Rubric.robustness        3/ 10   4.5%/ 15.0%
+tests/filesys/extended/Rubric.persistence       0/ 23   0.0%/ 20.0%
+tests/filesys/base/Rubric                      30/ 30  20.0%/ 20.0%
+tests/userprog/Rubric.functionality           108/108  10.0%/ 10.0%
+tests/userprog/Rubric.robustness               88/ 88   5.0%/  5.0%
+--------------------------------------------- --- --- ------ ------
+Total                                                  55.4%/100.0%
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+SUMMARY OF INDIVIDUAL TESTS
+
+Functionality of extended file system (tests/filesys/extended/Rubric.functionality):
+	- Test directory support.
+	  ** 0/ 1 tests/filesys/extended/dir-mkdir
+	  ** 0/ 3 tests/filesys/extended/dir-mk-tree
+
+	  ** 0/ 1 tests/filesys/extended/dir-rmdir
+	  ** 0/ 3 tests/filesys/extended/dir-rm-tree
+
+	  ** 0/ 5 tests/filesys/extended/dir-vine
+
+	- Test file growth.
+	     1/ 1 tests/filesys/extended/grow-create
+	     1/ 1 tests/filesys/extended/grow-seq-sm
+	  ** 0/ 3 tests/filesys/extended/grow-seq-lg
+	     3/ 3 tests/filesys/extended/grow-sparse
+	     3/ 3 tests/filesys/extended/grow-two-files
+	     1/ 1 tests/filesys/extended/grow-tell
+	     1/ 1 tests/filesys/extended/grow-file-size
+
+	- Test directory growth.
+	     1/ 1 tests/filesys/extended/grow-dir-lg
+	     1/ 1 tests/filesys/extended/grow-root-sm
+	     1/ 1 tests/filesys/extended/grow-root-lg
+
+	- Test writing from multiple processes.
+	     5/ 5 tests/filesys/extended/syn-rw
+
+	- Section summary.
+	     10/ 16 tests passed
+	     18/ 34 points subtotal
+
+Robustness of file system (tests/filesys/extended/Rubric.robustness):
+	  ** 0/ 1 tests/filesys/extended/dir-empty-name
+	  ** 0/ 1 tests/filesys/extended/dir-open
+	  ** 0/ 1 tests/filesys/extended/dir-over-file
+	  ** 0/ 1 tests/filesys/extended/dir-under-file
+
+	  ** 0/ 3 tests/filesys/extended/dir-rm-cwd
+	     2/ 2 tests/filesys/extended/dir-rm-parent
+	     1/ 1 tests/filesys/extended/dir-rm-root
+
+	- Section summary.
+	      2/  7 tests passed
+	      3/ 10 points subtotal
+
+Persistence of file system (tests/filesys/extended/Rubric.persistence):
+	  ** 0/ 1 tests/filesys/extended/dir-empty-name-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-mk-tree-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-mkdir-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-open-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-over-file-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-rm-cwd-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-rm-parent-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-rm-root-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-rm-tree-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-rmdir-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-under-file-persistence
+	  ** 0/ 1 tests/filesys/extended/dir-vine-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-create-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-dir-lg-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-file-size-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-root-lg-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-root-sm-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-seq-lg-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-seq-sm-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-sparse-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-tell-persistence
+	  ** 0/ 1 tests/filesys/extended/grow-two-files-persistence
+	  ** 0/ 1 tests/filesys/extended/syn-rw-persistence
+
+	- Section summary.
+	      0/ 23 tests passed
+	      0/ 23 points subtotal
+
+Functionality of base file system (tests/filesys/base/Rubric):
+	- Test basic support for small files.
+	     1/ 1 tests/filesys/base/sm-create
+	     2/ 2 tests/filesys/base/sm-full
+	     2/ 2 tests/filesys/base/sm-random
+	     2/ 2 tests/filesys/base/sm-seq-block
+	     3/ 3 tests/filesys/base/sm-seq-random
+
+	- Test basic support for large files.
+	     1/ 1 tests/filesys/base/lg-create
+	     2/ 2 tests/filesys/base/lg-full
+	     2/ 2 tests/filesys/base/lg-random
+	     2/ 2 tests/filesys/base/lg-seq-block
+	     3/ 3 tests/filesys/base/lg-seq-random
+
+	- Test synchronized multiprogram access to files.
+	     4/ 4 tests/filesys/base/syn-read
+	     4/ 4 tests/filesys/base/syn-write
+	     2/ 2 tests/filesys/base/syn-remove
+
+	- Section summary.
+	     13/ 13 tests passed
+	     30/ 30 points subtotal
+
+Functionality of system calls (tests/userprog/Rubric.functionality):
+	- Test argument passing on Pintos command line.
+	     3/ 3 tests/userprog/args-none
+	     3/ 3 tests/userprog/args-single
+	     3/ 3 tests/userprog/args-multiple
+	     3/ 3 tests/userprog/args-many
+	     3/ 3 tests/userprog/args-dbl-space
+
+	- Test "create" system call.
+	     3/ 3 tests/userprog/create-empty
+	     3/ 3 tests/userprog/create-long
+	     3/ 3 tests/userprog/create-normal
+	     3/ 3 tests/userprog/create-exists
+
+	- Test "open" system call.
+	     3/ 3 tests/userprog/open-missing
+	     3/ 3 tests/userprog/open-normal
+	     3/ 3 tests/userprog/open-twice
+
+	- Test "read" system call.
+	     3/ 3 tests/userprog/read-normal
+	     3/ 3 tests/userprog/read-zero
+
+	- Test "write" system call.
+	     3/ 3 tests/userprog/write-normal
+	     3/ 3 tests/userprog/write-zero
+
+	- Test "close" system call.
+	     3/ 3 tests/userprog/close-normal
+
+	- Test "exec" system call.
+	     5/ 5 tests/userprog/exec-once
+	     5/ 5 tests/userprog/exec-multiple
+	     5/ 5 tests/userprog/exec-arg
+
+	- Test "wait" system call.
+	     5/ 5 tests/userprog/wait-simple
+	     5/ 5 tests/userprog/wait-twice
+
+	- Test "exit" system call.
+	     5/ 5 tests/userprog/exit
+
+	- Test "halt" system call.
+	     3/ 3 tests/userprog/halt
+
+	- Test recursive execution of user programs.
+	    15/15 tests/userprog/multi-recurse
+
+	- Test read-only executable feature.
+	     3/ 3 tests/userprog/rox-simple
+	     3/ 3 tests/userprog/rox-child
+	     3/ 3 tests/userprog/rox-multichild
+
+	- Section summary.
+	     28/ 28 tests passed
+	    108/108 points subtotal
+
+Robustness of system calls (tests/userprog/Rubric.robustness):
+	- Test robustness of file descriptor handling.
+	     2/ 2 tests/userprog/close-stdin
+	     2/ 2 tests/userprog/close-stdout
+	     2/ 2 tests/userprog/close-bad-fd
+	     2/ 2 tests/userprog/close-twice
+	     2/ 2 tests/userprog/read-bad-fd
+	     2/ 2 tests/userprog/read-stdout
+	     2/ 2 tests/userprog/write-bad-fd
+	     2/ 2 tests/userprog/write-stdin
+	     2/ 2 tests/userprog/multi-child-fd
+
+	- Test robustness of pointer handling.
+	     3/ 3 tests/userprog/create-bad-ptr
+	     3/ 3 tests/userprog/exec-bad-ptr
+	     3/ 3 tests/userprog/open-bad-ptr
+	     3/ 3 tests/userprog/read-bad-ptr
+	     3/ 3 tests/userprog/write-bad-ptr
+
+	- Test robustness of buffer copying across page boundaries.
+	     3/ 3 tests/userprog/create-bound
+	     3/ 3 tests/userprog/open-boundary
+	     3/ 3 tests/userprog/read-boundary
+	     3/ 3 tests/userprog/write-boundary
+
+	- Test handling of null pointer and empty strings.
+	     2/ 2 tests/userprog/create-null
+	     2/ 2 tests/userprog/open-null
+	     2/ 2 tests/userprog/open-empty
+
+	- Test robustness of system call implementation.
+	     3/ 3 tests/userprog/sc-bad-arg
+	     3/ 3 tests/userprog/sc-bad-sp
+	     5/ 5 tests/userprog/sc-boundary
+	     5/ 5 tests/userprog/sc-boundary-2
+
+	- Test robustness of "exec" and "wait" system calls.
+	     5/ 5 tests/userprog/exec-missing
+	     5/ 5 tests/userprog/wait-bad-pid
+	     5/ 5 tests/userprog/wait-killed
+
+	- Test robustness of exception handling.
+	     1/ 1 tests/userprog/bad-read
+	     1/ 1 tests/userprog/bad-write
+	     1/ 1 tests/userprog/bad-jump
+	     1/ 1 tests/userprog/bad-read2
+	     1/ 1 tests/userprog/bad-write2
+	     1/ 1 tests/userprog/bad-jump2
+
+	- Section summary.
+	     34/ 34 tests passed
+	     88/ 88 points subtotal
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-mkdir FAILURE:
+
+run: open "b": FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-mkdir:
+
+Copying tests/filesys/extended/dir-mkdir to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/pUIlgxQLaJ.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-mkdir
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 201 sectors (100 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-mkdir' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-mkdir':
+(dir-mkdir) begin
+(dir-mkdir) mkdir "a"
+(dir-mkdir) create "a/b"
+(dir-mkdir) chdir "a"
+(dir-mkdir) open "b"
+(dir-mkdir) open "b": FAILED
+dir-mkdir: exit(1)
+Execution of 'dir-mkdir' complete.
+Timer: 56 ticks
+Thread: 0 idle ticks, 56 kernel ticks, 0 user ticks
+hdb1 (filesys): 58 reads, 363 writes
+hda2 (scratch): 200 reads, 2 writes
+Console: 1096 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-mk-tree FAILURE:
+
+Kernel panic in run: PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=825176367, size=4096)
+Call stack: 0xc0027991 0xc00240f2 0xc0024108 0xc002d956 0xc002daaf 0xc002d299 0xc002bdf7 0xc002b4c4 0xc002acde 0xc00217d4 0xc00218db 0x804a083 0x8048785 0x8048875 0x8048087 0x80486d2 0x8048935
+Translation of call stack:
+In kernel.o:
+0xc0027991: debug_panic (.../../lib/kernel/debug.c:38)
+0xc00240f2: check_sector (...../../devices/block.c:114)
+0xc0024108: block_write (...../../devices/block.c:137)
+0xc002d956: lookup_evict (...../../filesys/cache.c:121)
+0xc002daaf: write_via_cache (...../../filesys/cache.c:174)
+0xc002d299: inode_write_at (...../../filesys/inode.c:709)
+0xc002bdf7: dir_add (..../filesys/directory.c:176)
+0xc002b4c4: filesys_create (..../../filesys/filesys.c:57)
+0xc002acde: syscall_handler (...../userprog/syscall.c:271)
+0xc00217d4: intr_handler (..../threads/interrupt.c:367)
+0xc00218db: intr_entry (threads/intr-stubs.S:38)
+In tests/filesys/extended/dir-mk-tree:
+0x0804a083: create (.../../lib/user/syscall.c:93)
+0x08048785: do_touch (...sys/extended/mk-tree.c:66)
+0x08048875: make_tree (...sys/extended/mk-tree.c:30)
+0x08048087: test_main (...extended/dir-mk-tree.c:10)
+0x080486d2: main (...ild/../../tests/main.c:13)
+0x08048935: _start (.../../../lib/user/entry.c:9)
+Translations of user virtual addresses above are based on a guess at
+the binary to use.  If this guess is incorrect, then those
+translations will be misleading.
+
+OUTPUT FROM tests/filesys/extended/dir-mk-tree:
+
+Copying tests/filesys/extended/dir-mk-tree to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/afxFYemHMh.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-mk-tree
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 205 sectors (102 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-mk-tree' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-mk-tree':
+(dir-mk-tree) begin
+(dir-mk-tree) creating /0/0/0/0 through /3/2/2/3...
+Kernel PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=825176367, size=4096)
+
+Call stack: 0xc0027991 0xc00240f2 0xc0024108 0xc002d956 0xc002daaf 0xc002d299 0xc002bdf7 0xc002b4c4 0xc002acde 0xc00217d4 0xc00218db 0x804a083 0x8048785 0x8048875 0x8048087 0x80486d2 0x8048935.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../devices/timer.c:222 in real_time_sleep().
+d    À›@: exit(-1)
+Simulation terminated due to kernel panic.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rmdir FAILURE:
+
+run: rmdir "a": FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-rmdir:
+
+Copying tests/filesys/extended/dir-rmdir to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/OYuwFExXQJ.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-rmdir
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 201 sectors (100 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-rmdir' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-rmdir':
+(dir-rmdir) begin
+(dir-rmdir) mkdir "a"
+(dir-rmdir) rmdir "a"
+(dir-rmdir) rmdir "a": FAILED
+dir-rmdir: exit(1)
+Execution of 'dir-rmdir' complete.
+Timer: 55 ticks
+Thread: 0 idle ticks, 54 kernel ticks, 1 user ticks
+hdb1 (filesys): 54 reads, 357 writes
+hda2 (scratch): 200 reads, 2 writes
+Console: 1051 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rm-tree FAILURE:
+
+Kernel panic in run: PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=825176367, size=4096)
+Call stack: 0xc0027991 0xc00240f2 0xc0024108 0xc002d956 0xc002daaf 0xc002d299 0xc002bdf7 0xc002b4c4 0xc002acde 0xc00217d4 0xc00218db 0x804a207 0x8048909 0x80489f9 0x80480e5 0x8048856 0x8048ab9
+Translation of call stack:
+In kernel.o:
+0xc0027991: debug_panic (.../../lib/kernel/debug.c:38)
+0xc00240f2: check_sector (...../../devices/block.c:114)
+0xc0024108: block_write (...../../devices/block.c:137)
+0xc002d956: lookup_evict (...../../filesys/cache.c:121)
+0xc002daaf: write_via_cache (...../../filesys/cache.c:174)
+0xc002d299: inode_write_at (...../../filesys/inode.c:709)
+0xc002bdf7: dir_add (..../filesys/directory.c:176)
+0xc002b4c4: filesys_create (..../../filesys/filesys.c:57)
+0xc002acde: syscall_handler (...../userprog/syscall.c:271)
+0xc00217d4: intr_handler (..../threads/interrupt.c:367)
+0xc00218db: intr_entry (threads/intr-stubs.S:38)
+In tests/filesys/extended/dir-rm-tree:
+0x0804a207: create (.../../lib/user/syscall.c:93)
+0x08048909: do_touch (...sys/extended/mk-tree.c:66)
+0x080489f9: make_tree (...sys/extended/mk-tree.c:30)
+0x080480e5: test_main (...extended/dir-rm-tree.c:28)
+0x08048856: main (...ild/../../tests/main.c:13)
+0x08048ab9: _start (.../../../lib/user/entry.c:9)
+Translations of user virtual addresses above are based on a guess at
+the binary to use.  If this guess is incorrect, then those
+translations will be misleading.
+
+OUTPUT FROM tests/filesys/extended/dir-rm-tree:
+
+Copying tests/filesys/extended/dir-rm-tree to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/XpYFbFH51Z.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-rm-tree
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 207 sectors (103 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-rm-tree' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-rm-tree':
+(dir-rm-tree) begin
+(dir-rm-tree) creating /0/0/0/0 through /3/2/2/3...
+Kernel PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=825176367, size=4096)
+
+Call stack: 0xc0027991 0xc00240f2 0xc0024108 0xc002d956 0xc002daaf 0xc002d299 0xc002bdf7 0xc002b4c4 0xc002acde 0xc00217d4 0xc00218db 0x804a207 0x8048909 0x80489f9 0x80480e5 0x8048856 0x8048ab9.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../devices/timer.c:222 in real_time_sleep().
+d    À›@: exit(-1)
+Simulation terminated due to kernel panic.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-vine FAILURE:
+
+run: open ".": FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-vine:
+
+Copying tests/filesys/extended/dir-vine to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/nggt6g0cqj.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-vine
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 205 sectors (102 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-vine' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-vine':
+(dir-vine) begin
+(dir-vine) creating many levels of files and directories...
+(dir-vine) open ".": FAILED
+dir-vine: exit(1)
+Execution of 'dir-vine' complete.
+Timer: 56 ticks
+Thread: 0 idle ticks, 56 kernel ticks, 0 user ticks
+hdb1 (filesys): 65 reads, 373 writes
+hda2 (scratch): 204 reads, 2 writes
+Console: 1059 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-seq-lg FAILURE:
+
+Kernel panic in run: PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=2713351604, size=4096)
+Call stack: 0xc0027991 0xc00240f2 0xc0024108 0xc002d956 0xc002daaf 0xc002d299 0xc002b99a 0xc002afb0 0xc00217d4 0xc00218db 0x8049edb 0x8048654 0x80480a1 0x80486ee 0x8048719
+Translation of call stack:
+In kernel.o:
+0xc0027991: debug_panic (.../../lib/kernel/debug.c:38)
+0xc00240f2: check_sector (...../../devices/block.c:114)
+0xc0024108: block_write (...../../devices/block.c:137)
+0xc002d956: lookup_evict (...../../filesys/cache.c:121)
+0xc002daaf: write_via_cache (...../../filesys/cache.c:174)
+0xc002d299: inode_write_at (...../../filesys/inode.c:709)
+0xc002b99a: file_write (...d/../../filesys/file.c:98)
+0xc002afb0: syscall_handler (...../userprog/syscall.c:423)
+0xc00217d4: intr_handler (..../threads/interrupt.c:367)
+0xc00218db: intr_entry (threads/intr-stubs.S:38)
+In tests/filesys/extended/grow-seq-lg:
+0x08049edb: write (...../lib/user/syscall.c:123)
+0x08048654: seq_test (...sts/filesys/seq-test.c:26)
+0x080480a1: test_main (.../extended/grow-seq.inc:17)
+0x080486ee: main (...ild/../../tests/main.c:13)
+0x08048719: _start (.../../../lib/user/entry.c:9)
+Translations of user virtual addresses above are based on a guess at
+the binary to use.  If this guess is incorrect, then those
+translations will be misleading.
+
+OUTPUT FROM tests/filesys/extended/grow-seq-lg:
+
+Copying tests/filesys/extended/grow-seq-lg to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/7HT3C8Yjwu.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run grow-seq-lg
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 201 sectors (100 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'grow-seq-lg' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'grow-seq-lg':
+(grow-seq-lg) begin
+(grow-seq-lg) create "testme"
+(grow-seq-lg) open "testme"
+(grow-seq-lg) writing "testme"
+Kernel PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=2713351604, size=4096)
+
+Call stack: 0xc0027991 0xc00240f2 0xc0024108 0xc002d956 0xc002daaf 0xc002d299 0xc002b99a 0xc002afb0 0xc00217d4 0xc00218db 0x8049edb 0x8048654 0x80480a1 0x80486ee 0x8048719.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../devices/block.c:112 in check_sector().
+Simulation terminated due to kernel panic.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-empty-name FAILURE:
+
+run: mkdir "" (must return false): FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-empty-name:
+
+Copying tests/filesys/extended/dir-empty-name to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/ERZWQhwSCX.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-empty-name
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 201 sectors (100 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-empty-name' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-empty-name':
+(dir-empty-name) begin
+(dir-empty-name) mkdir "" (must return false)
+(dir-empty-name) mkdir "" (must return false): FAILED
+dir-empty-name: exit(1)
+Execution of 'dir-empty-name' complete.
+Timer: 55 ticks
+Thread: 0 idle ticks, 54 kernel ticks, 1 user ticks
+hdb1 (filesys): 52 reads, 355 writes
+hda2 (scratch): 200 reads, 2 writes
+Console: 1107 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-open FAILURE:
+
+run: open "xyzzy": FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-open:
+
+Copying tests/filesys/extended/dir-open to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/MZr1AgMCnx.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-open
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 201 sectors (100 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-open' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-open':
+(dir-open) begin
+(dir-open) mkdir "xyzzy"
+(dir-open) open "xyzzy"
+(dir-open) open "xyzzy": FAILED
+dir-open: exit(1)
+Execution of 'dir-open' complete.
+Timer: 55 ticks
+Thread: 0 idle ticks, 55 kernel ticks, 0 user ticks
+hdb1 (filesys): 55 reads, 358 writes
+hda2 (scratch): 200 reads, 2 writes
+Console: 1052 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-over-file FAILURE:
+
+run: create "abc" (must return false): FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-over-file:
+
+Copying tests/filesys/extended/dir-over-file to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/75034O0ItZ.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-over-file
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 201 sectors (100 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-over-file' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-over-file':
+(dir-over-file) begin
+(dir-over-file) mkdir "abc"
+(dir-over-file) create "abc" (must return false)
+(dir-over-file) create "abc" (must return false): FAILED
+dir-over-file: exit(1)
+Execution of 'dir-over-file' complete.
+Timer: 56 ticks
+Thread: 0 idle ticks, 56 kernel ticks, 0 user ticks
+hdb1 (filesys): 55 reads, 360 writes
+hda2 (scratch): 200 reads, 2 writes
+Console: 1135 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-under-file FAILURE:
+
+run: mkdir "abc" (must return false): FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-under-file:
+
+Copying tests/filesys/extended/dir-under-file to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/_WglgyVKk9.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-under-file
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 201 sectors (100 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-under-file' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-under-file':
+(dir-under-file) begin
+(dir-under-file) create "abc"
+(dir-under-file) mkdir "abc" (must return false)
+(dir-under-file) mkdir "abc" (must return false): FAILED
+dir-under-file: exit(1)
+Execution of 'dir-under-file' complete.
+Timer: 55 ticks
+Thread: 0 idle ticks, 54 kernel ticks, 1 user ticks
+hdb1 (filesys): 55 reads, 360 writes
+hda2 (scratch): 200 reads, 2 writes
+Console: 1143 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rm-cwd FAILURE:
+
+run: open "/": FAILED
+
+OUTPUT FROM tests/filesys/extended/dir-rm-cwd:
+
+Copying tests/filesys/extended/dir-rm-cwd to scratch partition...
+Copying tests/filesys/extended/tar to scratch partition...
+qemu -hda /tmp/0oiQXq_pjB.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q -f extract run dir-rm-cwd
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 1,008 sectors (504 kB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 206 sectors (103 kB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'dir-rm-cwd' into the file system...
+Putting 'tar' into the file system...
+Erasing ustar archive...
+Executing 'dir-rm-cwd':
+(dir-rm-cwd) begin
+(dir-rm-cwd) open "/"
+(dir-rm-cwd) open "/": FAILED
+dir-rm-cwd: exit(1)
+Execution of 'dir-rm-cwd' complete.
+Timer: 55 ticks
+Thread: 0 idle ticks, 54 kernel ticks, 1 user ticks
+hdb1 (filesys): 59 reads, 365 writes
+hda2 (scratch): 205 reads, 2 writes
+Console: 1035 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-empty-name-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-empty-name failed.
+
+OUTPUT FROM tests/filesys/extended/dir-empty-name-persistence:
+
+qemu -hda /tmp/3aqRf2e3x_.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  209,510,400 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 51 ticks
+Thread: 0 idle ticks, 51 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-empty-name.tar out of /tmp/3aqRf2e3x_.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-mk-tree-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-mk-tree failed.
+
+OUTPUT FROM tests/filesys/extended/dir-mk-tree-persistence:
+
+qemu -hda /tmp/QdPGi8trUe.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Kernel PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=825176367, size=4096)
+
+Call stack: 0xc0027991 0xc00240f2 0xc0024165 0xc002d9f9 0xc002c197 0xc002b9bb 0xc0028c3d 0xc002b6a7 0xc002b5a9 0xc00207cf.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../devices/timer.c:222 in real_time_sleep().
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 1 reads, 0 writes
+hda2 (scratch): 0 reads, 0 writes
+Console: 1139 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-mk-tree.tar out of /tmp/QdPGi8trUe.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-mkdir-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-mkdir failed.
+
+OUTPUT FROM tests/filesys/extended/dir-mkdir-persistence:
+
+qemu -hda /tmp/n8KA89tXvW.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 53 ticks
+Thread: 0 idle ticks, 53 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-mkdir.tar out of /tmp/n8KA89tXvW.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-open-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-open failed.
+
+OUTPUT FROM tests/filesys/extended/dir-open-persistence:
+
+qemu -hda /tmp/g53Lt2dvv2.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 53 ticks
+Thread: 0 idle ticks, 53 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-open.tar out of /tmp/g53Lt2dvv2.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-over-file-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-over-file failed.
+
+OUTPUT FROM tests/filesys/extended/dir-over-file-persistence:
+
+qemu -hda /tmp/sMgKqARdVG.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 53 ticks
+Thread: 0 idle ticks, 53 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-over-file.tar out of /tmp/sMgKqARdVG.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rm-cwd-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-rm-cwd failed.
+
+OUTPUT FROM tests/filesys/extended/dir-rm-cwd-persistence:
+
+qemu -hda /tmp/rDyGINFE5d.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-rm-cwd.tar out of /tmp/rDyGINFE5d.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rm-parent-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/dir-rm-parent-persistence:
+
+qemu -hda /tmp/An7gjixSFu.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-rm-parent.tar out of /tmp/An7gjixSFu.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rm-root-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/dir-rm-root-persistence:
+
+qemu -hda /tmp/fIZNAx0CDQ.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-rm-root.tar out of /tmp/fIZNAx0CDQ.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rm-tree-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-rm-tree failed.
+
+OUTPUT FROM tests/filesys/extended/dir-rm-tree-persistence:
+
+qemu -hda /tmp/09bg28ZA5P.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Kernel PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=825176367, size=4096)
+
+Call stack: 0xc0027991 0xc00240f2 0xc0024165 0xc002d9f9 0xc002c197 0xc002b9bb 0xc0028c3d 0xc002b6a7 0xc002b5a9 0xc00207cf.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../devices/timer.c:222 in real_time_sleep().
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 1 reads, 0 writes
+hda2 (scratch): 0 reads, 0 writes
+Console: 1139 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-rm-tree.tar out of /tmp/09bg28ZA5P.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-rmdir-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-rmdir failed.
+
+OUTPUT FROM tests/filesys/extended/dir-rmdir-persistence:
+
+qemu -hda /tmp/vwVa2mPZlZ.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-rmdir.tar out of /tmp/vwVa2mPZlZ.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-under-file-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-under-file failed.
+
+OUTPUT FROM tests/filesys/extended/dir-under-file-persistence:
+
+qemu -hda /tmp/pp5k84tnqx.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-under-file.tar out of /tmp/pp5k84tnqx.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/dir-vine-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/dir-vine failed.
+
+OUTPUT FROM tests/filesys/extended/dir-vine-persistence:
+
+qemu -hda /tmp/8M7gIdqSgZ.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/dir-vine.tar out of /tmp/8M7gIdqSgZ.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-create-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-create-persistence:
+
+qemu -hda /tmp/QmkviXmPvp.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 53 ticks
+Thread: 0 idle ticks, 53 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-create.tar out of /tmp/QmkviXmPvp.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-dir-lg-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-dir-lg-persistence:
+
+qemu -hda /tmp/uMypx8Gy9C.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 53 ticks
+Thread: 0 idle ticks, 53 kernel ticks, 0 user ticks
+hdb1 (filesys): 54 reads, 57 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-dir-lg.tar out of /tmp/uMypx8Gy9C.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-file-size-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-file-size-persistence:
+
+qemu -hda /tmp/fM8QgH9h3p.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  209,510,400 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-file-size.tar out of /tmp/fM8QgH9h3p.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-root-lg-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-root-lg-persistence:
+
+qemu -hda /tmp/gg3CTDh0Wv.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 53 ticks
+Thread: 0 idle ticks, 53 kernel ticks, 0 user ticks
+hdb1 (filesys): 54 reads, 57 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-root-lg.tar out of /tmp/gg3CTDh0Wv.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-root-sm-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-root-sm-persistence:
+
+qemu -hda /tmp/ua3VAOAFqP.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  209,510,400 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 51 ticks
+Thread: 0 idle ticks, 51 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-root-sm.tar out of /tmp/ua3VAOAFqP.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-seq-lg-persistence FAILURE:
+
+Prerequisite test tests/filesys/extended/grow-seq-lg failed.
+
+OUTPUT FROM tests/filesys/extended/grow-seq-lg-persistence:
+
+qemu -hda /tmp/io0rUEcl9O.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Kernel PANIC at ../../devices/block.c:112 in check_sector(): Access past end of device hdb1 (sector=2713351604, size=4096)
+
+Call stack: 0xc0027991 0xc00240f2 0xc0024165 0xc002d9f9 0xc002c197 0xc002b9bb 0xc0028c3d 0xc002b6a7 0xc002b5a9 0xc00207cf.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../devices/timer.c:222 in real_time_sleep().
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 1 reads, 0 writes
+hda2 (scratch): 0 reads, 0 writes
+Console: 1140 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-seq-lg.tar out of /tmp/io0rUEcl9O.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-seq-sm-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-seq-sm-persistence:
+
+qemu -hda /tmp/jH3FQvymH7.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-seq-sm.tar out of /tmp/jH3FQvymH7.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-sparse-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-sparse-persistence:
+
+qemu -hda /tmp/VyzQPES1nC.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-sparse.tar out of /tmp/VyzQPES1nC.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-tell-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-tell-persistence:
+
+qemu -hda /tmp/Xxy5TUkYHi.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-tell.tar out of /tmp/Xxy5TUkYHi.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/grow-two-files-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/grow-two-files-persistence:
+
+qemu -hda /tmp/bQpmNLKHuU.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/grow-two-files.tar out of /tmp/bQpmNLKHuU.dsk...
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/filesys/extended/syn-rw-persistence FAILURE:
+
+Error extracting file system:
+/: open failed
+
+OUTPUT FROM tests/filesys/extended/syn-rw-persistence:
+
+qemu -hda /tmp/PSm2VTbiAY.dsk -hdb tmp.dsk -m 4 -net none -nographic -monitor null
+PiLo hda1
+Loading.........
+Kernel command line: -q run 'tar fs.tar /' append fs.tar
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  157,081,600 loops/s.
+hda: 3,024 sectors (1 MB), model "QM00001", serial "QEMU HARDDISK"
+hda1: 147 sectors (73 kB), Pintos OS kernel (20)
+hda2: 2,048 sectors (1 MB), Pintos scratch (22)
+hdb: 5,040 sectors (2 MB), model "QM00002", serial "QEMU HARDDISK"
+hdb1: 4,096 sectors (2 MB), Pintos file system (21)
+filesys: using hdb1
+scratch: using hda2
+Boot complete.
+Executing 'tar fs.tar /':
+/: open failed
+tar: exit(1)
+Execution of 'tar fs.tar /' complete.
+Appending 'fs.tar' to ustar archive on scratch device...
+Timer: 52 ticks
+Thread: 0 idle ticks, 52 kernel ticks, 0 user ticks
+hdb1 (filesys): 46 reads, 49 writes
+hda2 (scratch): 0 reads, 5 writes
+Console: 831 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off...
+Copying tests/filesys/extended/syn-rw.tar out of /tmp/PSm2VTbiAY.dsk...
