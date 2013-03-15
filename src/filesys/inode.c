@@ -1012,6 +1012,12 @@ bool allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_
       }
       if (allocate_success) {
       		inode->length = old_length > new_length ? old_length : new_length;
+
+		struct inode_disk disk_inode_level0;    //for level 1 disk inode
+                //read_via_cache disk_inode_level0, it needs to be read anyway
+                read_via_cache(inode, (void *)&disk_inode_level0, inode->sector, 0, BLOCK_SECTOR_SIZE);
+                disk_inode_level0.length = old_length > new_length ? old_length : new_length;
+                write_via_cache(NULL, (void *)&disk_inode_level0, inode->sector, 0, BLOCK_SECTOR_SIZE);
       }
       return allocate_success;
 }
