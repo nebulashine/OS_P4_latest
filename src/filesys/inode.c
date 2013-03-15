@@ -15,9 +15,9 @@
 #define BUFFER_SIZE 64
 #define IDISK_SIZE 126
 
-/* KAI IMPLEMENTATION */
-allocate_disk_space_for_inode_write(struct inode * inode, off_t offset, off_t size);
-/* == KAI IMPLEMENTATION */
+/* our proj4 */
+bool allocate_disk_space_for_inode_write(struct inode * inode, off_t offset, off_t size);
+/* == our proj4 */
 
 /* On-disk inode.
    Must be exactly BLOCK_SECTOR_SIZE bytes long. */
@@ -188,6 +188,7 @@ inode_create (block_sector_t sector, off_t length)
 
   ASSERT (length >= 0);
 
+//	length = 7;
   /* If this assertion fails, the inode structure is not exactly
      one sector in size, and you should fix that. */
   ASSERT (sizeof *disk_inode == BLOCK_SECTOR_SIZE);
@@ -363,9 +364,9 @@ inode_open (block_sector_t sector)
 
   /* Allocate memory. */
   inode = malloc (sizeof *inode);
-  if (inode == NULL)
+  if (inode == NULL) {
     return NULL;
-
+   }
   /* Initialize. */
   list_push_front (&open_inodes, &inode->elem);
   inode->sector = sector;
@@ -715,6 +716,7 @@ inode_write_at (struct inode *inode, const void *buffer_, off_t size,
   free (bounce);	
 	*/
 
+	printf("bytes_written %d, size %d\n", bytes_written, size);
   return bytes_written;
 }
 
@@ -757,8 +759,7 @@ inode_length (const struct inode *inode)
 //	i) check the end of existing position
 // 2. put data between [length, offset-1] to be 0
 // 3. update inode and inode_disk length
-void
-allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_t size){
+bool allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_t size){
 
 
 // step 1. allocate disk_space for [length, offset+size]
@@ -772,11 +773,11 @@ allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_t siz
       off_t new_length = offset+size+1; //new POSSIBLE length
       int existing_sector_num = bytes_to_sectors(old_length);
       int future_possible_total_sector_num  = bytes_to_sectors(offset+size);
-      sectors_to_be_alloc= future_possible_total_sector_num - existing_sector_num;
+      int sectors_to_be_alloc = future_possible_total_sector_num - existing_sector_num;
 	
       bool allocate_success = true;
    
-      if (sectors_to_be_alloc > 0)
+      if (sectors_to_be_alloc > 0) {
 	      block_sector_t allocated_disk_sector_index[sectors_to_be_alloc];
 	      int num_allocated = 0;
 	      while (num_allocated < sectors_to_be_alloc){
@@ -823,21 +824,33 @@ allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_t siz
 		}
 
 		struct inode_disk *disk_inode_level0 = NULL;	//for level 1 disk inode
+		//read_via_cache disk_inode_level0, it needs to be read anyway
+		read_via_cache(inode, (void *)disk_inode_level0, inode->sector, 0, BLOCK_SECTOR_SIZE);
+
 		struct inode_disk *disk_inode_level1 = NULL;	//for level 1 disk inode
 		struct inode_disk *disk_inode_level2 = NULL;	//for level 2 disk inode
+		struct inode_disk *disk_inode_level2_level1 = NULL;	//for level 2's level1  disk inode
 
 		
 		disk_inode_level0 = calloc (1, sizeof *disk_inode_level0);
-//			if ( (end_level == 1 || end_level == 2) && 
-//					start_level == 0 || start_level == 1) {
 		disk_inode_level1 = calloc (1, sizeof *disk_inode_level1);
-//			if (end_level == 2) {
 		disk_inode_level2 = calloc (1, sizeof *disk_inode_level2);
+		disk_inode_level2_level1 = calloc (1, sizeof *disk_inode_level2_level1);
+
+		if (disk_inode_level0 == NULL || disk_inode_level1 == NULL || disk_inode_level2 == NULL || disk_inode_level2_level1 == NULL) {
+			return false;
+		}
 	
+		//read the disk_inode_level0 first anyway
+		read_via_cache(NULL, (void *)disk_inode_level0, inode->sector, 0, BLOCK_SECTOR_SIZE);
+
+
 		// START INSERT INODE_DISK HERE
 
 		// insert LEVEL 0 inode_disk
 		
+			//record the number of sector_index been put in allocated_disk_sector_index in level0
+		int level0_allocated_num = 0;
 		if (start_level == 0){
 			int level0_index_start = (old_length == 0) ? 0 : start_sector_index;
 			int level0_index_end = 0;
@@ -847,6 +860,7 @@ allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_t siz
 				level0_index_end = IDISK_SIZE - 3;	
 			}
 
+			level0_allocated_num = level0_index_end - level0_index_start + 1;
 			int i= level0_index_start;
 			for ( ; i<=level0_index_end; i++){
 				disk_inode_level0->file_sector_index[i] = allocated_disk_sector_index[i-level0_index_start];
@@ -855,91 +869,149 @@ allocate_disk_space_for_inode_write(struct inode* inode, off_t offset, off_t siz
 
 		// insert LEVEL 1 inode_disk
 
+			//record the number of sector_index been put in allocated_disk_sector_index in level1
+		int level1_allocated_num = 0;
 		if((end_level == 1 || end_level == 2)  &&
-				(start_level ==0 || start_level == 1 )){
+		  (start_level ==0 || start_level == 1 )){
 
-			// determine if we need to alloc inode_disk_level1
-			int level1_index_start = ( start_sector_index < (IDISK_SIZE-2) ) ? 0 : (start_sector_index - (IDISK_SIZE-2));
+			int level1_index_start = (start_sector_index < (IDISK_SIZE-2) ) ? 0 : (start_sector_index - (IDISK_SIZE-2));
 			int level1_index_end = 0;
 			if(end_level == 1){
 				level1_index_end = end_sector_index - (IDISK_SIZE - 2); 
-			} else {
+			} else {	//when end_level == 2
 				level1_index_end = IDISK_SIZE - 1;
-			}
+			}	
 			
 			block_sector_t level1_sector_index = 0;
 			
+
+			// determine if we need to alloc inode_disk_level1
 			if( level1_index_start == 0){
 				free_map_allocate(1, &level1_sector_index); // TODO: if free_map_allocate is NOT successful, free_map_release()
+				disk_inode_level0->file_sector_index[IDISK_SIZE - 2] = level1_sector_index;
 			}else{
-				
-
-		
-			disk_inode->file_sector_index[IDISK_SIZE-2] = level1_sector_index; // ADD level1 sector num to 'second last' of LEVEL 0
-
-				int level1_index_max = (level_max == 1) ? 
-							sectors - (IDISK_SIZE-2) :
-							IDISK_SIZE - 1;
-				int i = 0;
-				for ( ; i <= level1_index_max; i++){
-					disk_inode_level1->file_sector_index[i] = allocated_disk_sector_index[i + (IDISK_SIZE-2)];
-				}	
+				//get level1_sector_index from inode_disk_level0
+				level1_sector_index = disk_inode_level0->file_sector_index[IDISK_SIZE - 2];
+				//since want to write start from the last point, need to read it in first
+				read_via_cache(NULL, (void *)disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);
 			}
+				
+				//calculate allocated_disk_sector_index_start_index as 
+				//the start index in allocated_disk_sector_index[]
+			int allocated_disk_sector_index_start_index = level1_index_start - level0_allocated_num;
+/*
+			if (start_level == 0) {
+									//now level1_index_start must be 0 !
+				allocated_disk_sector_index_start_index = level1_index_start - level0_allocated_num;
+			} else {	//when start_level == 1
+				allocated_disk_sector_index_start_index = level1_index_start;
+			}	
+*/
+			level1_allocated_num = level1_index_end - level1_index_start + 1;
+			int i = level1_index_start;
+			for ( ; i <= level1_index_end; i++){
+
+				disk_inode_level1->file_sector_index[i] = allocated_disk_sector_index[i - allocated_disk_sector_index_start_index]; 
+			}	
+		}
 
 			// insert LEVEL 2 inode_disk
-			if(level_max == 2){
-				block_sector_t level2_sector_index = 0;
-				free_map_allocate(1, &level2_sector_index); // TODO: if free_map_allocate is NOT successful, free_map_release()
-				disk_inode->file_sector_index[IDISK_SIZE-1] = level2_sector_index; // ADD level2 sector num to 'last' of LEVEL 0
+			//record the number of sector_index been put in allocated_disk_sector_index in level2-level1
+		int level2_level1_allocated_num = 0;
+		if(end_level == 2){
+			int total_start_index_left = start_sector_index - (2*IDISK_SIZE-2);
+			int level2_index_start = total_start_index_left < 0 ? 0 : total_start_index_left/IDISK_SIZE; 
+        		int level1_index_start = total_start_index_left < 0 ? 0 : total_start_index_left%IDISK_SIZE;
 			
-							//0313	//means modified on this day
-				int total_index_left = sectors - (2*IDISK_SIZE-2);
-				int level2_entry_num = total_index_left/IDISK_SIZE + 1;
+			int total_end_index_left = end_sector_index - (2*IDISK_SIZE-2);
+        		int level2_index_end = total_end_index_left/IDISK_SIZE;
+        		int level1_index_end = total_end_index_left%IDISK_SIZE;
 
-				int i = 0;
-				for ( ; i < level2_entry_num; i++){
-					block_sector_t level1_sector_index = 0;
+			// determine if we need to alloc inode_disk_level2
+			block_sector_t level2_sector_index = 0;
+			if (level2_index_start == 0 && level1_index_start == 0) {
+				free_map_allocate(1, &level2_sector_index); // TODO: if free_map_allocate is NOT successful, free_map_release()
+				disk_inode_level0->file_sector_index[IDISK_SIZE-1] = level2_sector_index; // ADD level2 sector num to 'last' of LEVEL 0
+			} else {
+				//get level2_sector_index from inode_disk_level0
+				level2_sector_index = disk_inode_level0->file_sector_index[IDISK_SIZE - 1];
+				//since want to write start from the last point, need to read it in first
+				read_via_cache(NULL, (void *)disk_inode_level2, level2_sector_index, 0, BLOCK_SECTOR_SIZE);
+			}
+		
+
+			int i = level2_index_start;
+			for ( ; i <= level2_index_end; i++){
+				// determine if we need to alloc inode_disk_level2
+				block_sector_t level1_sector_index = 0;
+				if (level2_index_start == i && level1_index_start > 0) {
+					//get level1_sector_index from inode_disk_level2
+					level1_sector_index = disk_inode_level2->file_sector_index[i];
+					//since want to write start from the last point, need to read it in first
+					read_via_cache(NULL, (void *)disk_inode_level2_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);
+				} else {
 					free_map_allocate(1, &level1_sector_index); // TODO: if free_map_allocate is NOT successful, free_map_release()
 					disk_inode_level2->file_sector_index[i] = level1_sector_index; // ADD level1 sector num to 'i' of LEVEL2
+				}
 
-					int level1_index_max = IDISK_SIZE - 1;
-					if(i == level2_entry_num - 1) {
-						level1_index_max = total_index_left%IDISK_SIZE;
-					}
-					int j = 0;
-					for ( ; j <= level1_index_max; j++){
-						int loc_level1_index = 2*IDISK_SIZE-2 + i*IDISK_SIZE + j;
-						disk_inode_level1->file_sector_index[j] = allocated_disk_sector_index[loc_level1_index];
-					}				
-					write_via_cache(NULL, (void *)disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);
-				}	
+				int level1_index_min = 0;	//start index of each level1 disk_inode
+				if (level2_index_start == i) {
+					level1_index_min = level1_index_start; 
+				}
 
-			}
+				int level1_index_max = IDISK_SIZE - 1;	//end index of each level1 disk_inode
+				if(level2_index_end == i) {
+					level1_index_max = level1_index_end;
+				}
 
-			// after all insertion, write_via_cache()
-			// END INSERT INODE_DISK HERE 
-		
-			write_via_cache(NULL, (void *)disk_inode, sector, 0, BLOCK_SECTOR_SIZE);
+				int allocated_disk_sector_index_start_index = 
+					level2_index_start - level0_allocated_num - level1_allocated_num - level2_level1_allocated_num;
 
-			if (level_max == 1) {
-				block_sector_t level1_sector_index = disk_inode->file_sector_index[IDISK_SIZE-2]; 
-				write_via_cache(NULL, (void *)disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);	
-			}
-			if (level_max == 2) { // write LEVEL2 here, LEVEL 1 has been written in if(level_max == 2)
-				block_sector_t level2_sector_index = disk_inode->file_sector_index[IDISK_SIZE-1]; 
-				write_via_cache(NULL, (void *)disk_inode_level2, level2_sector_index, 0, BLOCK_SECTOR_SIZE);		
-			}
+				level2_level1_allocated_num += level1_index_max - level1_index_min + 1;
+				int j = level1_index_min;
+				for ( ; j <= level1_index_max; j++){
+					disk_inode_level2_level1->file_sector_index[j] = 
+					allocated_disk_sector_index[i - allocated_disk_sector_index_start_index];
+				}				
+				write_via_cache(NULL, (void *)disk_inode_level2_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);
+			}	
 
-	  		free(disk_inode_level0);
-	  		free(disk_inode_level1); 
-	  		free(disk_inode_level2);
-			
-			success = true; 
-	       } else{
-			num_allocated--;
-		      while(num_allocated >= 0){
-			free_map_release(allocated_disk_sector_index[num_allocated], 1);
-		      }
-	       }
+		}
+
+		// after all insertion, write_via_cache()
+		// END INSERT INODE_DISK HERE 
 	
-       /* == KAI IMPLEMENTATION */
+
+		if (end_level == 2) { // write LEVEL2 here, LEVEL 1 has been written in if(level_max == 2)
+			block_sector_t level2_sector_index = disk_inode_level0->file_sector_index[IDISK_SIZE-1]; 
+			write_via_cache(NULL, (void *)disk_inode_level2, level2_sector_index, 0, BLOCK_SECTOR_SIZE);		
+		}
+
+		if ( (end_level == 1 || end_level == 2) && 
+			(start_level == 0 || start_level == 1)) {
+			block_sector_t level1_sector_index = disk_inode_level0->file_sector_index[IDISK_SIZE-2]; 
+			write_via_cache(NULL, (void *)disk_inode_level1, level1_sector_index, 0, BLOCK_SECTOR_SIZE);	
+		}
+
+		// 3. update inode and inode_disk length
+		disk_inode_level0->length = old_length > new_length ? old_length : new_length; 
+
+		write_via_cache(NULL, (void *)disk_inode_level0, inode->sector, 0, BLOCK_SECTOR_SIZE);
+
+		free(disk_inode_level0);
+		free(disk_inode_level1); 
+		free(disk_inode_level2);
+		free(disk_inode_level2_level1);
+		
+	  } else{
+		num_allocated--;
+		while(num_allocated >= 0){
+			free_map_release(allocated_disk_sector_index[num_allocated], 1);
+		}
+	 }
+      }
+      if (allocate_success) {
+      		inode->length = old_length > new_length ? old_length : new_length;
+      }
+      return allocate_success;
+}
